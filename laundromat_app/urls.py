@@ -3,7 +3,7 @@ Contains urls for different app pages as well as the django admin site
 '''
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -13,6 +13,7 @@ urlpatterns = [
     path('listing/', views.laundromat_listing, name = 'laundromat_listing'),
     # Default home page
     path('', views.home_page, name = 'home_page'),
+    path('/', include('laundromat_app.urls')),
     # Contact us page
     path('contact/', views.contact_us, name = 'contact_us'),
     # About page
