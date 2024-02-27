@@ -15,7 +15,7 @@ def laundromat_listing(request):
 
 #loads the home page view layout and infomation will be covered in template desgin
 def home_page(request):
-    return render(request, 'home.html')
+    return render(request, 'homepage.html')
 
 #checks for all 3 fields to be filled in, if it is it sends a thank you message, if not leaves the form stil up
 def contact_us(request):

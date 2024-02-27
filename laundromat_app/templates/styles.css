@@ -1,0 +1,41 @@
+/* Add your custom styles here */
+
+body {
+  font-family: "Arial", sans-serif;
+}
+
+/* Style for the Registration Box */
+.card {
+  width: 100%;
+}
+
+/* Style for the Service Cards and Laundromat Cards */
+.card {
+  height: 100%;
+}
+
+/* Style for the Footer */
+footer {
+  padding: 20px 0;
+  color: #777;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Adjustments for smaller screens */
+  .navbar-brand img {
+    height: 20px;
+  }
+
+  .navbar button {
+    margin-top: 10px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  footer {
+    text-align: center;
+  }
+}

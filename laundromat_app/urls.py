@@ -12,8 +12,7 @@ urlpatterns = [
     # Laundromat listings page
     path('listing/', views.laundromat_listing, name = 'laundromat_listing'),
     # Default home page
-    path('', views.home_page, name = 'home_page'),
-    path('/', include('laundromat_app.urls')),
+    path('home/', views.home_page, name = 'home_page'),    
     # Contact us page
     path('contact/', views.contact_us, name = 'contact_us'),
     # About page
