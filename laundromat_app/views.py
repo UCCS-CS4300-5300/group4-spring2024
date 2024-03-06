@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import render
+from django.views import generic
+from django.views.generic.edit import UpdateView
 from django.http import HttpResponse
-from .forms import ContactForm
+from .forms import ContactForm, LaundromatForm
 from .models import Laundromat  # Make sure we already created Laundromat model in models.py
+from django.urls import reverse_lazy, reverse
 
 def laundromat_listing(request):
     # Retrieve all laundromat objects from the database
@@ -36,5 +39,31 @@ def about(request):
 #the about page using the'about.html'template
   return render(request, 'about.html')
 
+#view for the laundromat creation page
+class LaundromatCreate(generic.edit.CreateView):
+   model = Laundromat
+   form_class = LaundromatForm
+   template_name = 'laundromat_form.html'
+   
+   def get_success_url(self):
+    return reverse('laundromat_list')
 
+   def form_valid(self, form):
+    # Save the form data to the database
+    form.save()
+    return super().form_valid(form)
+
+#allows a user to edit an existing laundromat
+class LaundromatUpdate(UpdateView):
+    model = Laundromat
+    form_class = LaundromatForm
+    template_name = 'laundromat_update.html' 
+
+class LaundromatListView(generic.ListView):
+   model = Laundromat
+   template_name = 'laundromat_list.html'
+
+class LaundromatDetailView(generic.DetailView):
+   model = Laundromat
+   template_name = 'laundromat_detail.html'
 

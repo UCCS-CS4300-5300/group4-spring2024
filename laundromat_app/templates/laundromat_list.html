@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}View All Laundromats{% endblock %}
+
+{% block content %}
+<h1>Laundromats in Colorado Springs</h1>
+{% if laundromat_list %}
+<ul>
+{% for laundromat in laundromat_list %}
+<li>
+{{ laundromat.name }}
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no laundromats.</p>
+{% endif %}
+{% endblock %}
