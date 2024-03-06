@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render
 from django.views import generic
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.http import HttpResponse
 from .forms import ContactForm, LaundromatForm
 from .models import Laundromat  # Make sure we already created Laundromat model in models.py
@@ -41,7 +41,7 @@ def about(request):
   return render(request, 'about.html')
 
 #view for the laundromat creation page
-class LaundromatCreate(generic.edit.CreateView):
+class LaundromatCreate(CreateView):
    model = Laundromat
    form_class = LaundromatForm
    template_name = 'laundromat_form.html'
@@ -74,6 +74,14 @@ class LaundromatUpdate(UpdateView):
     def form_valid(self, form):
         # Save the form data to the database
         return super().form_valid(form)
+
+class LaundromatDeleteView(DeleteView):
+    model = Laundromat
+    # Redirect URL after deletion
+    success_url = reverse_lazy('laundromat_list')  
+    # Template for confirmation page
+    template_name = 'laundromat_confirm_delete.html'  
+
 
 
 class LaundromatListView(generic.ListView):

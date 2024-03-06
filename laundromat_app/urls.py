@@ -23,4 +23,6 @@ urlpatterns = [
     path('laundromats/create', views.LaundromatCreate.as_view(), name ='laundromat_create'),
     # Update a laundromat 
     path('laundromats/<int:pk>/update', views.LaundromatUpdate.as_view(), name ='laundromat_update'),
+    #delete a laundromat
+    path('laundromats/<int:pk>/delete/', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
 ]
