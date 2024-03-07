@@ -7,8 +7,6 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    # Django admin site
-    path('admin/', admin.site.urls),
     # Default home page
     path('', views.home_page, name = 'home_page'),    
     # Contact us page
