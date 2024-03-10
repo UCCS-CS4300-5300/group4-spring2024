@@ -24,5 +24,9 @@ urlpatterns = [
     # Update a laundromat 
     path('laundromats/<int:pk>/update', views.LaundromatUpdate.as_view(), name ='laundromat_update'),
     #delete a laundromat
-    path('laundromats/<int:pk>/delete/', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
+    path('laundromats/<int:pk>/delete', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
+    # View all machines in a laundromat 
+    path('laundromats/<int:pk>/machines', views.MachineListView.as_view(), name ='machine_list'),
+    #create a machine
+    path('laundromats/<int:pk>/machines/create', views.MachineCreate.as_view(), name='machine_create'),
 ]

@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.views import generic
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.http import HttpResponse
-from .forms import ContactForm, LaundromatForm
-from .models import Laundromat  # Make sure we already created Laundromat model in models.py
+from .forms import ContactForm, LaundromatForm, MachineForm
+from .models import Laundromat, Machines  # Make sure we already created Laundromat model in models.py
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
 
@@ -91,4 +91,65 @@ class LaundromatListView(generic.ListView):
 class LaundromatDetailView(generic.DetailView):
    model = Laundromat
    template_name = 'laundromat_detail.html'
+
+#view for the machine creation page
+class MachineCreate(CreateView):
+    model = Machines
+    form_class = MachineForm
+    template_name = 'machine_form.html'
+   
+    def get_success_url(self):
+      return reverse('machine_list', kwargs={'pk': self.object.laundromat.pk})
+
+    def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      # Get the laundromat object based on the URL parameter
+      laundromat_id = self.kwargs.get('pk')
+      laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
+      # Pass the laundromat name to the template context
+      context['laundromat'] = laundromat
+      return context
+
+    def form_valid(self, form):
+      # Get the laundromat object based on the URL parameter
+      laundromat_id = self.kwargs.get('pk')
+      laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
+      
+      # Set the laundromat field in the form instance
+      form.instance.laundromat = laundromat
+      form.instance.status = 'Open'
+      
+      # Call the parent class's form_valid method to save the form data
+      return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        response = super().form_invalid(form)
+        return response
+    
+
+    
+
+class MachineListView(generic.ListView):
+   model = Machines
+   template_name = 'machine_list.html'
+
+   def get_queryset(self):
+       # Get the laundromat object based on the URL parameter
+       laundromat_id = self.kwargs.get('pk')
+       laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
+       
+       # Filter machines based on the laundromat
+       queryset = Machines.objects.filter(laundromat=laundromat)
+       return queryset
+
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      # Get the laundromat object based on the URL parameter
+      laundromat_id = self.kwargs.get('pk')
+      laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
+      # Pass the laundromat name to the template context
+      context['laundromat'] = laundromat
+      return context
+
 
