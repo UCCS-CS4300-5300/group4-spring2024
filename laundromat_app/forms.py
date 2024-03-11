@@ -19,6 +19,11 @@ class MachineForm(forms.ModelForm):
     class Meta:
         model = Machines
         fields = ['laundromat', 'machine_ID', 'machine_choice', 'status']
+        #hide the laundromat field in the form
+        widgets = {
+            'laundromat': forms.HiddenInput(),
+            'status': forms.HiddenInput()
+        }
 
 #uncomment if we move on, ideally we do a view with 45 time limit leaving time to swap or clean machines
 #class ReservationForm(forms.ModelForm):
