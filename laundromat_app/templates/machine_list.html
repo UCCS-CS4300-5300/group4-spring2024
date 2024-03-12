@@ -1,7 +1,12 @@
 <!-- machine_list.html -->
 
-{% extends 'base.html' %} {% block title %}Machines in {{ laundromat.name }}{%
-endblock %} {% block content %}
+{% extends 'base.html' %} 
+
+{% block title %}Machines in {{ laundromat.name}}{%endblock %} 
+
+
+{% block content %}
+
 <div class="container">
   <h1 class="mt-4">Machines in {{ laundromat.name }}</h1>
   {% if machine_list %}
