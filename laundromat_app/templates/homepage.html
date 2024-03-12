@@ -7,7 +7,7 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../static/styles.css" />
     <title>Your Laundry App</title>
   </head>
   <body>
@@ -178,7 +178,10 @@
         <!-- Laundromat Cards or Carousel Go Here -->
         <div class="row mt-4">
           <div class="col-md-4 mb-4">
-            <div class="card">
+            <div
+              class="card laundromats-list"
+              onclick="window.location.href='{% url 'machine_list' %}'"
+            >
               <div class="card-body">
                 <h5 class="card-title">Crossroads Laundry Services</h5>
                 <p class="card-text">
@@ -191,7 +194,10 @@
             </div>
           </div>
           <div class="col-md-4 mb-4">
-            <div class="card">
+            <div
+              class="card laundromats-list"
+              onclick="window.location.href='{% url 'machine_list' %}'"
+            >
               <div class="card-body">
                 <h5 class="card-title">Super Laundry</h5>
                 <p class="card-text">
@@ -204,7 +210,10 @@
             </div>
           </div>
           <div class="col-md-4 mb-4">
-            <div class="card">
+            <div
+              class="card laundromats-list"
+              onclick="window.location.href='{% url 'machine_list' %}'"
+            >
               <div class="card-body">
                 <h5 class="card-title">Smooth Laundry Services</h5>
                 <p class="card-text">

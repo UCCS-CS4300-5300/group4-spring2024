@@ -10,7 +10,11 @@ urlpatterns = [
     # Django admin site
     path('admin/', admin.site.urls),
     # Default home page
-    path('', views.home_page, name = 'home_page'),    
+    path('', views.home_page, name = 'home_page'),
+    # Machine list page
+    path('machines/', views.machine_list, name = 'machine_list'),
+    # Reserve machine page
+    path('reservation/', views.reserve_machine, name = 'reserve_machine'),      
     # Contact us page
     path('contact/', views.contact_us, name = 'contact_us'),
     # About page
