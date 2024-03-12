@@ -92,3 +92,12 @@ class LaundromatDetailView(generic.DetailView):
    model = Laundromat
    template_name = 'laundromat_detail.html'
 
+
+
+def laundromat_detail(request, laundromat_id):
+    laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
+    machines = laundromat.machines.all()  # Assuming a related_name='machines' in Machine model
+    return render(request, 'laundromat_app/laundromat_detail.html', {
+        'laundromat': laundromat,
+        'machines': machines
+    })
