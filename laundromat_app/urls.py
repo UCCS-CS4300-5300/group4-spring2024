@@ -29,4 +29,10 @@ urlpatterns = [
     path('laundromats/<int:pk>/machines', views.MachineListView.as_view(), name ='machine_list'),
     #create a machine
     path('laundromats/<int:pk>/machines/create', views.MachineCreate.as_view(), name='machine_create'),
+    #update a machine
+    path('laundromats/<int:laundromat_pk>/machines/<int:pk>/update', views.MachineUpdate.as_view(), name='machine_update'),
+    #delete a machine
+    path('laundromats/<int:laundromat_pk>/machines/<int:pk>/delete', views.MachineDeleteView.as_view(), name='machine_delete'),
+    #view the details of a single machine in a laundromat
+    path('laundromats/<int:laundromat_pk>/machines/<int:pk>', views.MachineDetailView.as_view(), name='machine_detail'),
 ]

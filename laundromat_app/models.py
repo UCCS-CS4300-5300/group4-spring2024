@@ -27,7 +27,7 @@ class Machines(models.Model):
     ]
 
     Open = 'Open'
-    Reserved = 'Resvered'
+    Reserved = 'Reserved'
 
     Machine_Status =[
         (Open, 'Open'),

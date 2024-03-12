@@ -1,0 +1,12 @@
+<!-- machine_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{machine.laundromat.name}} Machine {{ machine.machine_ID }}{% endblock %}
+
+{% block content %}
+<h1>{{machine.laundromat.name}} Machine {{ machine.machine_ID }}</h1>
+  {% csrf_token %}
+
+  <p><strong>Type:</strong> {{ machine.machine_choice }}</p>
+  <p><strong>Status:</strong> {{ machine.status }}</p>
+{% endblock %}
