@@ -203,6 +203,9 @@ class MachineListView(generic.ListView):
       laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
       # Pass the laundromat name to the template context
       context['laundromat'] = laundromat
+
+      # Add the machine_list queryset to the context
+      context['machine_list'] = self.get_queryset()
       return context
 
 class MachineDetailView(generic.DetailView):
