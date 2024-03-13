@@ -1,0 +1,20 @@
+<!-- laundromat_update.html -->
+{% extends 'base.html' %}
+
+{% block title %}Update Laundromat{% endblock %}
+
+{% block content %}
+<h1>Update Your Laundromat's Information</h1>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="id_laundromatName">Laundromat Name</label>
+    <input type="text" class="form-control" id="id_laundromatName" name="name" placeholder="Enter laundromat name" value="{{ form.name.value }}">
+  </div>
+  <div class="form-group">
+    <label for="id_location">Location</label>
+    <input type="text" class="form-control" id="id_location" name="location" placeholder="Enter location" value="{{ form.location.value }}">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

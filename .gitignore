@@ -1,0 +1,10 @@
+<<<<<<< HEAD
+laundromat_app/__pycache__/*
+*.sqlite3
+db.sqlite3
+=======
+db.sqlite3
+__pycache__/
+venv/
+**/migrations/
+>>>>>>> 00b9b559809c724234a3d80b276300847bf5b569
