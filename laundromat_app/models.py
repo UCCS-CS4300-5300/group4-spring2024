@@ -14,8 +14,12 @@ class Laundromat(models.Model):
     
     def get_absolute_url(self):
         return reverse('laundromat_detail', args=[str(self.id)])
+<<<<<<< HEAD
     
 
+=======
+       
+>>>>>>> 00b9b559809c724234a3d80b276300847bf5b569
 
 class Machines(models.Model):
     Dryer = 'Dryer'
@@ -28,7 +32,7 @@ class Machines(models.Model):
     ]
 
     Open = 'Open'
-    Reserved = 'Resvered'
+    Reserved = 'Reserved'
 
     Machine_Status =[
         (Open, 'Open'),
