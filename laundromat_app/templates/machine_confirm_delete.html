@@ -1,0 +1,14 @@
+<!-- machine_confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block content %}
+<h1>Confirm Deletion</h1>
+<p>Are you sure you want to delete {{laundromat.name}}?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Confirm</button>
+  <a href="{% url 'laundromat_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
