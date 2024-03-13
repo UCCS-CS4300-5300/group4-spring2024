@@ -1,6 +1,14 @@
 from django.test import TestCase
 from .models import Machines, Laundromat
+from django.urls import reverse
 
+class URLTest(TestCase):
+    def test_app_urls(self):
+        # Access home page
+        home_url = reverse('home_page')
+        response = self.client.get(home_url)
+        
+        self.assertEqual(response.status_code, 200)
 
 class LaundromatTest(TestCase):
     
