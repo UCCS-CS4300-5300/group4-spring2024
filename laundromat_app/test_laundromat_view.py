@@ -6,8 +6,14 @@ class LaundromatTest(TestCase):
     
     #creating a fake test laundromat doesn't go into DB
     def setUp(self):
-        self.laundromat = Laundromat.objects.create(name="Test Laundromat")
+        self.laundromat = Laundromat.objects.create(name="Test Laundromat", location = "Hawaii", \
+            hours = "everyday", description = "cool place")
 
+    def test_new_user(self):
+        self.assertEqual(self.laundromat.name, "Test Laundromat")
+        self.assertEqual(self.laundromat.location, "Hawaii")
+        self.assertEqual(self.laundromat.hours, "everyday")
+        self.assertEqual(self.laundromat.description, "cool place")
 
     #  creating a machine instance and saving it to the DB
     def test_create_machine(self):
