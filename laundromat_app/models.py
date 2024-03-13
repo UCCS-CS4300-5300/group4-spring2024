@@ -9,12 +9,14 @@ class Laundromat(models.Model):
     hours = models.CharField(max_length = 100)
     description = models.CharField(max_length = 500)
     
+   
+
     def __str__(self):
         return self.name
     
     def get_absolute_url(self):
         return reverse('laundromat_detail', args=[str(self.id)])
-    
+       
 
 class Machines(models.Model):
     Dryer = 'Dryer'
@@ -27,7 +29,7 @@ class Machines(models.Model):
     ]
 
     Open = 'Open'
-    Reserved = 'Resvered'
+    Reserved = 'Reserved'
 
     Machine_Status =[
         (Open, 'Open'),
