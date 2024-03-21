@@ -71,6 +71,32 @@
                   <img class="machine-image" src="#"/>
                   <br/>
                   <span class="badge bg-danger text-white">Unavailable</span>
+
+                  <!-- Timer for unavailable laundry machine-->
+                  <div style="width: 100px; height: 25px; margin: auto; border: 1px solid red;">
+                    <span id="timer"></span>
+                  </div>
+
+                  <p id="timer"></p>
+                  <script>
+                    // Countdown to current date
+                    var countDownDate = new Date();
+                    countDownDate.setHours(countDownDate.getHours() + 1);
+
+                    // Decrement timer per second
+                    var x = setInterval(function() {
+                      var now = new Date().getTime();
+                      var distance = countDownDate - now;
+
+                      // Calculate 60 minutes for timer
+                      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                      // Display timer in container
+                      document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+                    }, 1000);
+                  </script>
+
                   <div class="mt-3">
                       <button type="button" class="btn btn-secondary" disabled>Make reservation</button>
                   </div>
