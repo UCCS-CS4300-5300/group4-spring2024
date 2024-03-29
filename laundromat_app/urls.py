@@ -35,4 +35,9 @@ urlpatterns = [
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>/delete', views.MachineDeleteView.as_view(), name='machine_delete'),
     #view the details of a single machine in a laundromat
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>', views.MachineDetailView.as_view(), name='machine_detail'),
+    #new path to create the api listing, takes the request
+    path('laundromat-listing/', views.laundromat_listing, name='laundromat_listing'),
+
 ]
+
+
