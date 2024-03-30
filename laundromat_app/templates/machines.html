@@ -72,29 +72,57 @@
                   <br/>
                   <span class="badge bg-danger text-white">Unavailable</span>
 
-                  <!-- Timer for unavailable laundry machine-->
+                  <!--Timer for laundry machine in use-->
                   <div style="width: 100px; height: 25px; margin: auto; border: 1px solid red;">
-                    <span id="timer"></span>
+                    <span id="result"></span>
                   </div>
 
-                  <p id="timer"></p>
+                  <!--Buttons for starting and stopping timer-->
+                  <button id="start">Start</button>
+                  <button id="stop">Stop</button>
+
                   <script>
-                    // Countdown to current date
-                    var countDownDate = new Date();
-                    countDownDate.setHours(countDownDate.getHours() + 1);
+                    // Create and initialize variables
+                    var current = new Date();
+                    current.setHours(current.getHours() + 1);
+                    let time;
+                    let count = current - new Date();
+                    const result = document.getElementById('result');
+                    const start = document.getElementById('start');
+                    const stop = document.getElementById('stop');
+                    
+                    // Function to start timer
+                    function start_time() {
+                      current = new Date(new Date().getTime() + count);
+                      time = setInterval(decrement_time, 1000);
+                      start.disabled = true;
+                      stop.disabled = false;
+                    }
+                    
+                    // Function to stop timer
+                    function stop_time() {
+                      clearInterval(time);
+                      start.disabled = false;
+                      stop.disabled = true;
+                      count = current - new Date(); 
+                    }
 
-                    // Decrement timer per second
-                    var x = setInterval(function() {
-                      var now = new Date().getTime();
-                      var distance = countDownDate - now;
+                    // Function to decrement timer by the second
+                    function decrement_time() {
+                      var current_2 = new Date().getTime();
+                      count = current - current_2;
+                      
+                      // Calculate 60 minutes for timer using minutes and seconds
+                      let minutes = Math.floor((count % (1000 * 60 * 60)) / (1000 * 60));
+                      let seconds = Math.floor((count % (1000 * 60)) / 1000);
+                      
+                      // Output countdown timer
+                      result.textContent = minutes + "m " + seconds + "s ";
+                    }
 
-                      // Calculate 60 minutes for timer
-                      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                      // Display timer in container
-                      document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
-                    }, 1000);
+                    start.addEventListener('click', start_time);
+                    stop.addEventListener('click', stop_time);
+                    decrement_time();
                   </script>
 
                   <div class="mt-3">
