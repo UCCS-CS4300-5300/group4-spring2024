@@ -18,7 +18,7 @@ class SignUpForm(UserCreationForm):
 class LaundromatForm(forms.ModelForm):
     class Meta:
         model = Laundromat
-        fields = ['name', 'location']
+        fields = ['name', 'location', 'hours', 'description']
 
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, label='Your Name')

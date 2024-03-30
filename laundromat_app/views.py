@@ -57,7 +57,25 @@ class UnauthorizedView(TemplateView):
 
 #loads the home page view layout and infomation will be covered in template desgin
 def home_page(request):
-    return render(request, 'homepage.html')
+    if request.user.is_authenticated:
+        if request.user.groups.filter(name='Owner').exists():
+            # Query laundromats owned by the current user
+            laundromats = Laundromat.objects.filter(owner=request.user)
+            
+            # Fetch all machines for each laundromat
+            for laundromat in laundromats:
+                laundromat.machines = laundromat.machines_set.all()
+
+            # Pass the queryset to the template context
+            context = {
+                'laundromats': laundromats
+            }
+            return render(request, 'owner_homepage.html', context)
+        else:
+            return render(request, 'homepage.html')
+    else:
+        # Handle anonymous users (optional)
+        return render(request, 'homepage.html')
 
 def machine_list(request):
     return render(request, 'machines.html')
@@ -262,7 +280,7 @@ class MachineUpdate(UserPassesTestMixin, UpdateView):
   
   def test_func(self):
       # Retrieve the laundromat ID from URL parameters
-      laundromat_id = self.kwargs.get('pk')
+      laundromat_id = self.kwargs.get('laundromat_pk')
       # Retrieve the laundromat object based on the ID
       laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
       # Check if the logged-in user is an owner and owns the laundromat
@@ -290,7 +308,7 @@ class MachineDeleteView(UserPassesTestMixin, DeleteView):
     
     def test_func(self):
         # Retrieve the laundromat ID from URL parameters
-        laundromat_id = self.kwargs.get('pk')
+        laundromat_id = self.kwargs.get('laundromat_pk')
         # Retrieve the laundromat object based on the ID
         laundromat = get_object_or_404(Laundromat, pk=laundromat_id)
         # Check if the logged-in user is an owner and owns the laundromat
