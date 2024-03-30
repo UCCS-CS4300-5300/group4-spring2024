@@ -28,9 +28,22 @@
                 <input class="form-control mr-sm-2 custom-search-bar" type="search" placeholder="City or Zip code" aria-label="Search" name="q">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+
+
         </div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="button">Account</button>
-    </nav>
+        {% if user.is_authenticated %}
+        <div class="navbar-text mx-auto"> <!-- Center the welcome message -->
+            <p class="text-center font-weight-bold mb-0 mr-3">Welcome, {{ request.user.username }}!</p>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button">Account</button>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+        {% endif %}
+</nav>
+
 
     <!-- Placeholder for page-specific content -->
     <div class="container mt-4">
