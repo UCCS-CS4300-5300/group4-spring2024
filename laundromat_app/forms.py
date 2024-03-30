@@ -1,7 +1,14 @@
 from django import forms
 from .models import *
 from .models import Machines
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
 #from .models import Reservation #if we move on uncomment
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'password1', 'password2', 'is_customer', 'is_owner')
 
 #a form used for creating a laundromat in the app
 class LaundromatForm(forms.ModelForm):

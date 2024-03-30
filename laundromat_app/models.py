@@ -1,7 +1,16 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+class CustomUser(AbstractUser):
+    is_customer = models.BooleanField(default=False)
+    is_owner = models.BooleanField(default=False)
+
+    class Meta(AbstractUser.Meta):
+        db_table = 'auth_user'
+        swappable = 'AUTH_USER_MODEL'
+        default_related_name = 'custom_user_related'
 
 class Laundromat(models.Model):
     name = models.CharField(max_length = 100)

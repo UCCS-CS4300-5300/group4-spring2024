@@ -7,6 +7,29 @@ from .forms import ContactForm, LaundromatForm, MachineForm
 from .models import Laundromat, Machines  # Make sure we already created Laundromat model in models.py
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.views import LoginView
+from django.views.generic.edit import CreateView
+from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect, render
+from django.contrib.auth import logout
+
+
+
+class Signup(CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('home_page')
+    template_name = 'signup.html'
+
+@login_required
+def logout_request(request):
+  logout(request)
+  return redirect('home_page')
+
+
+def login_redirect(request):
+  return redirect('home_page')
 
 def laundromat_listing(request):
     # Retrieve all laundromat objects from the database
