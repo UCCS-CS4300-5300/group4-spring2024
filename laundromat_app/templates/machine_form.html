@@ -1,0 +1,34 @@
+<!-- machine_form.html -->
+{% extends 'base.html' %}
+
+{% block title %}Create Machine{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1 class="mt-4">Create Machine for {{ laundromat.name }}</h1>
+  <form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+    <!-- Render the laundromat field (hidden) -->
+
+    <input type="hidden" name="laundromat" value="{{ laundromat.pk }}">
+    <div class="form-group">
+      <label for="machineID">Machine ID</label>
+      <input type="text" class="form-control" id="machineID" name="machine_ID" placeholder="Enter the ID number on your machine.">
+    </div>
+    <div class="form-group">
+      <label for="machineChoice">Machine Choice</label>
+      <select class="form-control" id="machineChoice" name="machine_choice">
+        <option value="Dryer">Dryer</option>
+        <option value="Washer">Washer</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select class="form-control" id="status" name="status">
+        <option value="Open">Open</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}

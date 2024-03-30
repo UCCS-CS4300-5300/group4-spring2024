@@ -52,6 +52,12 @@ def laundromat_listing(request):
 def home_page(request):
     return render(request, 'homepage.html')
 
+def machine_list(request):
+    return render(request, 'machines.html')
+
+def reserve_machine(request):
+    return render(request, 'reserve_machine.html')
+
 #checks for all 3 fields to be filled in, if it is it sends a thank you message, if not leaves the form stil up
 def contact_us(request):
   if request.method == 'POST':
