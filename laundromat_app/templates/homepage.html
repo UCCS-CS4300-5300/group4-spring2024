@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% extends 'base.html' %}
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,27 +9,16 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="../static/styles.css" />
+
+    <link rel="stylesheet" href="styles.css" />
+    {% block title %}
+
     <title>Your Laundry App</title>
+    {% endblock title %}
+
   </head>
   <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#"
-        ><img src="logo.png" alt="Logo" height="30"
-      /></a>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-        </ul>
-      </div>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="button">
-        Account
-      </button>
-    </nav>
+    {% block content %}
 
     <!-- Main Section -->
     <div class="container mt-4">
@@ -228,6 +219,8 @@
         </div>
       </div>
     </div>
+    {% endblock content %}
+    {% block footer %}
 
     <!-- Footer -->
     <footer class="pt-4 mt-4 bg-light">
@@ -271,6 +264,7 @@
         </div>
       </div>
     </footer>
+    {% endblock footer %}
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
