@@ -7,6 +7,33 @@ from .forms import ContactForm, LaundromatForm, MachineForm
 from .models import Laundromat, Machines  # Make sure we already created Laundromat model in models.py
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import CustomerProfile, OwnerProfile
+
+
+@login_required
+def customer_dashboard(request):
+    # View for customer dashboard
+    try:
+        customer_profile = request.user.customerprofile
+    except CustomerProfile.DoesNotExist:
+        # Redirect or show an error message if the user is not a customer
+        return render(request, 'error.html', {'message': 'Access Denied'})
+    # Logic for customer dashboard view
+    return render(request, 'customer_dashboard.html')
+
+@login_required
+def owner_dashboard(request):
+    # View for owner dashboard
+    try:
+        owner_profile = request.user.ownerprofile
+    except OwnerProfile.DoesNotExist:
+        # Redirect or show an error message if the user is not an owner
+        return render(request, 'error.html', {'message': 'Access Denied'})
+    # Logic for owner dashboard view
+    return render(request, 'owner_dashboard.html')
+
 
 def laundromat_listing(request):
     # Retrieve all laundromat objects from the database
