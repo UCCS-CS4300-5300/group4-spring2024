@@ -14,6 +14,10 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LogoutView, LoginView
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
+from django.conf import settings  # New import
+from django.shortcuts import render
+from django.conf import settings
+import requests
 
 
 class Signup(CreateView):
@@ -44,13 +48,43 @@ class CustomLoginView(LoginView):
           return next_url
       return super().get_success_url()
 
+
+
 def laundromat_listing(request):
-    # Retrieve all laundromat objects from the database
-    laundromats = Laundromat.objects.all()
+    # user's search query (city or zip code)
+    search_query = request.GET.get('q', '')
     
-    # Pass the laundromats to the template
-    # The template will need to iterate over each laundromat and display its details
-    return render(request, 'laundromat_listing.html', {'laundromats': laundromats})
+    # list to hold the laundromat data
+    laundromats = []
+
+    if search_query:
+        #  (make sure to set it in your environment or settings file... I did both)
+        api_key = settings.GOOGLE_API_KEY
+
+        # building the Geocoding API request URL
+        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={search_query}&key={api_key}"
+        
+        # requesting to the Geocoding API
+        geocode_response = requests.get(geocode_url).json()
+
+        if geocode_response.get('status') == 'OK':
+            # taking the latitude and longitude from the Geocoding API response
+            location = geocode_response['results'][0]['geometry']['location']
+            latitude, longitude = location['lat'], location['lng']
+
+            # creating the Places API request URL
+            places_url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius=5000&type=laundry&key={api_key}"
+            
+            # request to the Places API
+            places_response = requests.get(places_url).json()
+
+            if places_response.get('status') == 'OK':
+                # takes the places API response data to the laundromats list
+                laundromats = places_response['results']
+
+    # Render the template with the list of laundromats from above
+    return render(request, 'laundromat_list.html', {'laundromat_list': laundromats})
+
 
 class UnauthorizedView(TemplateView):
     template_name = 'unauthorized.html'
