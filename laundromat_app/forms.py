@@ -1,7 +1,18 @@
 from django import forms
 from .models import *
 from .models import Machines
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 #from .models import Reservation #if we move on uncomment
+
+class SignUpForm(UserCreationForm):
+    email = forms.EmailField()
+    group = forms.ChoiceField(choices=[(group.name, group.name) for group in Group.objects.all()])
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
 
 #a form used for creating a laundromat in the app
 class LaundromatForm(forms.ModelForm):

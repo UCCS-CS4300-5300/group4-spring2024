@@ -1,20 +1,39 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from django.views import generic
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.http import HttpResponse
-from .forms import ContactForm, LaundromatForm, MachineForm
+from .forms import ContactForm, LaundromatForm, MachineForm, SignUpForm
 from .models import Laundromat, Machines  # Make sure we already created Laundromat model in models.py
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.views import LogoutView, LoginView
 
 
 class Signup(CreateView):
-  form_class = UserCreationForm
+  form_class = SignUpForm
   template_name = 'signup.html'
   success_url = reverse_lazy('home_page')
 
+  def form_valid(self, form):
+    group_name = form.cleaned_data['group']
+    user = form.save()
+    group = Group.objects.get(name=group_name)
+    user.groups.add(group)
+    return super().form_valid(form)
+  
+
+class CustomLogoutView(LogoutView):
+    next_page = 'home_page'  # Redirect to the home page after logout
+
+
+class CustomLoginView(LoginView):
+    template_name = 'login.html'  
+    success_url = reverse_lazy('home_page')
 
 def laundromat_listing(request):
     # Retrieve all laundromat objects from the database
@@ -55,24 +74,34 @@ def about(request):
   return render(request, 'about.html')
 
 #view for the laundromat creation page
-class LaundromatCreate(CreateView):
-   model = Laundromat
-   form_class = LaundromatForm
-   template_name = 'laundromat_form.html'
-   
-   def get_success_url(self):
-    return reverse('laundromat_list')
 
-   def form_valid(self, form):
-    # Save the form data to the database
-    form.save()
-    return super().form_valid(form)
+class LaundromatCreate(UserPassesTestMixin, CreateView):
+  model = Laundromat
+  form_class = LaundromatForm
+  template_name = 'laundromat_form.html'
+
+  def test_func(self):
+      return self.request.user.groups.filter(name='Owner').exists()
+
+  def get_success_url(self):
+      return reverse('laundromat_list')
+
+  def form_valid(self, form):
+      # Save the form data to the database
+      form.save()
+      return super().form_valid(form)
 
 #allows a user to edit an existing laundromat
-class LaundromatUpdate(UpdateView):
+class LaundromatUpdate(UpdateView, UserPassesTestMixin):
     model = Laundromat
     form_class = LaundromatForm
     template_name = 'laundromat_update.html'
+
+    def test_func(self):
+        user = self.request.user
+        print(user.groups.all())  # Print the user's groups
+        return user.groups.filter(name='Owner').exists()
+
 
     def get_object(self, queryset=None):
         # Retrieve the Laundromat instance using the pk from URL parameters

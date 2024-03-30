@@ -5,6 +5,7 @@ Contains urls for different app pages as well as the django admin site
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from .views import CustomLogoutView, CustomLoginView
 
 urlpatterns = [
     # Django admin site
@@ -13,6 +14,10 @@ urlpatterns = [
     path('', views.home_page, name = 'home_page'),
     #signup page
     path('signup', views.Signup.as_view(), name='signup'),
+    #login page
+    path('login/', CustomLoginView.as_view(), name='login'),
+    #logoout page
+    path('logout/', CustomLogoutView.as_view(), name='logout'),
     # Machine list page
     path('machines/', views.machine_list, name = 'machine_list'),
     # Reserve machine page
