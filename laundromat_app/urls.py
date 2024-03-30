@@ -11,6 +11,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Default home page
     path('', views.home_page, name = 'home_page'),
+    #signup page
+    path('signup', views.Signup.as_view(), name='signup'),
     # Machine list page
     path('machines/', views.machine_list, name = 'machine_list'),
     # Reserve machine page
