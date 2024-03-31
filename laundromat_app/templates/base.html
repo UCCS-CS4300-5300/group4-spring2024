@@ -24,24 +24,23 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a></li>
             </ul>
             <!-- Search Form within the navbar collapse to ensure it is responsive -->
-            <form class="form-inline my-2 my-lg-0" action="{% url 'laundromat_listing' %}" method="get">
+            <form class="form-inline my-2 my-lg-0 mr-3" action="{% url 'laundromat_listing' %}" method="get">
                 <input class="form-control mr-sm-2 custom-search-bar" type="search" placeholder="City or Zip code" aria-label="Search" name="q">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
-
-
-        </div>
-        {% if user.is_authenticated %}
-        <div class="navbar-text mx-auto"> <!-- Center the welcome message -->
-            <p class="text-center font-weight-bold mb-0 mr-3">Welcome, {{ request.user.username }}!</p>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="button">Account</button>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
-        {% endif %}
+            
+            {% if user.is_authenticated %}
+                <div class="navbar-text"> <!-- Center the welcome message -->
+                    <p class="text-center font-weight-bold mb-0 mr-3 d-inline-block">Welcome, {{ request.user.username }}!</p>
+                    <button class="btn btn-outline-success my-2 my-sm-0 d-inline-block">Account</button>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
+                    </form>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+            {% endif %}
 </nav>
 
 
