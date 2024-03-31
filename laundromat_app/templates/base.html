@@ -1,5 +1,5 @@
 {% load static %}
-<!-- base.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,66 +7,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-    <title>{% block title %}Springs Laundromats{% endblock %}</title>
+    <title>{% block title %}Springs Laundromats{% endblock title %}</title>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><img src="logo.png" alt="Logo" height="30"></a>
-        <div class="navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-            </ul>
-        </div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="button">Account</button>
-    </nav>
 
-    <!-- Main Content -->
+        <a class="navbar-brand" href="#"><img src="{% static 'images/logo.png' %}" alt="Logo" height="30"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home_page' %}">Home</a></li>
+
+                <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a></li>
+            </ul>
+            <!-- Search Form within the navbar collapse to ensure it is responsive -->
+            <form class="form-inline my-2 my-lg-0 mr-3" action="{% url 'laundromat_listing' %}" method="get">
+                <input class="form-control mr-sm-2 custom-search-bar" type="search" placeholder="City or Zip code" aria-label="Search" name="q">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            
+            {% if user.is_authenticated %}
+                <div class="navbar-text"> <!-- Center the welcome message -->
+                    <p class="text-center font-weight-bold mb-0 mr-3 d-inline-block">Welcome, {{ request.user.username }}!</p>
+                    <button class="btn btn-outline-success my-2 my-sm-0 d-inline-block">Account</button>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
+                    </form>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+            {% endif %}
+</nav>
+
+
+    <!-- Placeholder for page-specific content -->
     <div class="container mt-4">
-        {% block content %}{% endblock %}
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock content %}
     </div>
 
     <!-- Footer -->
     <footer class="pt-4 mt-auto bg-light">
         <div class="container">
             <div class="row">
+                <!-- Footer content here -->
+                <!-- Dynamically generate footer links if needed -->
+                {% block footer %}
                 <div class="col-md-2">
                     <h5>Logo</h5>
-                    <ul class="list-unstyled">
-                        <li></li>
-                    </ul>
                 </div>
                 <div class="col-md-2">
                     <h5>Address</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Link 4</a></li>
-                        <li><a href="#">Link 5</a></li>
-                        <li><a href="#">Link 6</a></li>
-                    </ul>
+                    <!-- Address Links -->
                 </div>
                 <div class="col-md-2">
                     <h5>Contact Us</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Link 7</a></li>
-                        <li><a href="#">Link 8</a></li>
-                        <li><a href="#">Link 9</a></li>
-                    </ul>
+                    <!-- Contact Links -->
                 </div>
                 <div class="col-md-2">
                     <h5>About us</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Link 10</a></li>
-                        <li><a href="#">Link 11</a></li>
-                        <li><a href="#">Link 12</a></li>
-                    </ul>
+                    <!-- About Links -->
                 </div>
                 <div class="col-md-4">
                     <h5>Socials</h5>
                     <p>Contact Information and Social Links</p>
                 </div>
+                {% endblock footer %}
             </div>
         </div>
     </footer>

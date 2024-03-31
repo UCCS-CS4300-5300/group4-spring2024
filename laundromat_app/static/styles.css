@@ -2,6 +2,8 @@
 
 body {
   font-family: "Arial", sans-serif;
+  overflow-y: auto; /* Enable vertical scrolling for the entire page */
+  margin-bottom: 100px; /* Add space between body content and footer */
 }
 
 /* Style for the Registration Box */
@@ -41,6 +43,7 @@ footer {
 .machine-image > img {
   height: 100%;
     width: 100%;
+
 }
 
 /* Responsive Design */
@@ -75,3 +78,4 @@ footer {
 .laundromats-list {
   cursor: pointer;
 }
+
