@@ -112,7 +112,7 @@ def home_page(request):
         else:
             return render(request, 'homepage.html')
     else:
-        # Handle anonymous users (optional)
+        # Handle anonymous users 
         return render(request, 'homepage.html')
 
 def machine_list(request):
