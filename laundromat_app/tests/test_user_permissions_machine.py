@@ -62,4 +62,16 @@ class MachineUserTestCase(TestCase):
         self.assertRedirects(response, reverse('unauthorized_view'))
 
 
-
+    def test_regular_user_cannot_access_machine_delete(self):
+        # Log in as the regular user
+        self.client.login(username='regular_user', password='password123')
+        # Construct the machine update URL with appropriate parameters
+        laundromat_pk = self.laundromat.pk  
+        machine_pk = self.machine.pk  
+        machine_delete_url = reverse('machine_delete', kwargs={'laundromat_pk': laundromat_pk, 'pk': machine_pk})
+        # Make a GET request to the machine update view
+        response = self.client.get(machine_delete_url)
+        # Check if the response status code is 302 (Redirect)
+        self.assertEqual(response.status_code, 302)
+        # Check if the regular user is redirected to the unauthorized view
+        self.assertRedirects(response, reverse('unauthorized_view'))
