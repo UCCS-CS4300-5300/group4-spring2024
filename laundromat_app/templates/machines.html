@@ -71,60 +71,6 @@
                   <img class="machine-image" src="#"/>
                   <br/>
                   <span class="badge bg-danger text-white">Unavailable</span>
-
-                  <!--Timer for laundry machine in use-->
-                  <div style="width: 100px; height: 25px; margin: auto; border: 1px solid red;">
-                    <span id="result"></span>
-                  </div>
-
-                  <!--Buttons for starting and stopping timer-->
-                  <button id="start">Start</button>
-                  <button id="stop">Stop</button>
-
-                  <script>
-                    // Create and initialize variables
-                    var current = new Date();
-                    current.setHours(current.getHours() + 1);
-                    let time;
-                    let count = current - new Date();
-                    const result = document.getElementById('result');
-                    const start = document.getElementById('start');
-                    const stop = document.getElementById('stop');
-                    
-                    // Function to start timer
-                    function start_time() {
-                      current = new Date(new Date().getTime() + count);
-                      time = setInterval(decrement_time, 1000);
-                      start.disabled = true;
-                      stop.disabled = false;
-                    }
-                    
-                    // Function to stop timer
-                    function stop_time() {
-                      clearInterval(time);
-                      start.disabled = false;
-                      stop.disabled = true;
-                      count = current - new Date(); 
-                    }
-
-                    // Function to decrement timer by the second
-                    function decrement_time() {
-                      var current_2 = new Date().getTime();
-                      count = current - current_2;
-                      
-                      // Calculate 60 minutes for timer using minutes and seconds
-                      let minutes = Math.floor((count % (1000 * 60 * 60)) / (1000 * 60));
-                      let seconds = Math.floor((count % (1000 * 60)) / 1000);
-                      
-                      // Output countdown timer
-                      result.textContent = minutes + "m " + seconds + "s ";
-                    }
-
-                    start.addEventListener('click', start_time);
-                    stop.addEventListener('click', stop_time);
-                    decrement_time();
-                  </script>
-
                   <div class="mt-3">
                       <button type="button" class="btn btn-secondary" disabled>Make reservation</button>
                   </div>
