@@ -17,6 +17,7 @@ class CustomLogoutViewTests(TestCase):
             'password2': 'TestPassword123',
             'group': 'Owner'  # Assuming 'Owner' is one of the groups
         }
+        
     def test_logged_in_user_can_successfully_logout(self):
         # Log in the user
         self.client.login(username='testuser', password='TestPassword123')
