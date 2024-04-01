@@ -6,7 +6,7 @@ from .forms import ContactForm, LaundromatForm, MachineForm, SignUpForm
 from .models import Laundromat, Machines  # Make sure we already created Laundromat model in models.py
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -40,6 +40,10 @@ class CustomLogoutView(LogoutView):
 class CustomLoginView(LoginView):
     template_name = 'login.html'  
     success_url = reverse_lazy('home_page')
+    authentication_form = AuthenticationForm  # Set the authentication form
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
       # If the 'next' parameter is present, redirect to that URL after login
@@ -108,7 +112,7 @@ def home_page(request):
         else:
             return render(request, 'homepage.html')
     else:
-        # Handle anonymous users (optional)
+        # Handle anonymous users 
         return render(request, 'homepage.html')
 
 def machine_list(request):
