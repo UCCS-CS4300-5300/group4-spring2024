@@ -22,84 +22,70 @@
         <div class="col-md-4">
           <!-- Registration Box -->
           {% if not user.is_authenticated %}
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Springs Laundromats</h5>
-              <!-- Registration Form Goes Here -->
-              <form>
-                <div class="form-group">
-                  <label for="username">Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Enter a username"
-                  />
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Springs Laundromats</h5>
+                  <!-- Registration Form Goes Here -->
+                  <form class="signup" method="post" action="{% url 'signup' %}"> <!-- Add action attribute -->
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        name="username" 
+                        placeholder="Enter a username"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email" 
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label> <!-- Correct id to "password" -->
+                      <input
+                        type="password" 
+                        class="form-control"
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="confirm_password">Confirm Password</label>
+                      <input
+                        type="password" 
+                        class="form-control"
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        placeholder="Confirm your password"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="group">User Type</label>
+                      <select name="group" id="group" class="form-control">
+                        <option value="Customer">Customer</option>
+                        <option value="Owner">Service Provider</option>
+                      </select>
+                    </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                      Create Account
+                    </button>
+                    <p class="mt-2 text-center">
+                      Already a member? <a href="{% url 'login' %}">Log in</a>
+                    </p>
+                  </form>
                 </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="username">Password</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Enter your password"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="username">Phone</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Enter your phone"
-                  />
-                </div>
-                <div class="form-group">
-                  <label>User Type</label>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="userType"
-                      id="customer"
-                      value="customer"
-                      checked
-                    />
-                    <label class="form-check-label" for="customer"
-                      >Customer</label
-                    >
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="userType"
-                      id="serviceProvider"
-                      value="serviceProvider"
-                    />
-                    <label class="form-check-label" for="serviceProvider"
-                      >Service Provider</label
-                    >
-                  </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">
-                  Create Account
-                </button>
-                <p class="mt-2 text-center">
-                  Already a member? <a href="#">Log in</a>
-                </p>
-              </form>
-            </div>
-          </div>
+              </div>
+              
           {% endif %}
         </div>
       </div>

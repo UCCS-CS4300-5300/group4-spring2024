@@ -5,7 +5,7 @@
 
 {% block content %}
 <h1>Confirm Deletion</h1>
-<p>Are you sure you want to delete {{laundromat.name}}?</p>
+<p>Are you sure you want to delete {{machine.machine_ID}}?</p>
 <form method="post">
   {% csrf_token %}
   <button type="submit" class="btn btn-danger">Confirm</button>

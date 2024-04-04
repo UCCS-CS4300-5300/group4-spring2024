@@ -16,13 +16,16 @@
     <input type="text" class="form-control" id="id_location" name="location" placeholder="Enter location" value="{{ form.location.value }}">
   </div>
   <div class="form-group">
-    <label for="hours">Hours of Operation</label>
-    <input type="number" class="form-control" id="hours" name="hours" placeholder="Enter hours of operation">
+    <label for="id_hours">Hours of Operation</label>
+    <input type="number" class="form-control" id="id_hours" name="hours" placeholder="Enter hours of operation" value="{{ form.hours.value }}">
   </div>
   <div class="form-group">
-    <label for="description">Description</label>
-    <textarea class="form-control" id="description" name="description" placeholder="Enter description"></textarea>
+    <label for="id_description">Description</label>
+    <textarea class="form-control" id="id_description" name="description" placeholder="Enter description">{{ form.description.value }}</textarea>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<br><br>
+<a href="{% url 'laundromat_delete' laundromat.pk %}" class="btn btn-danger">Delete Laundromat</a>
+
 {% endblock %}
