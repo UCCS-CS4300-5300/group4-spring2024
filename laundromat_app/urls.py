@@ -28,7 +28,7 @@ urlpatterns = [
     # About page
     path('about/', views.about, name = 'about'),
     # View all laundromats 
-    path('laundromats/', views.LaundromatListView.as_view(), name ='laundromat_list'),
+    path('laundromats', views.LaundromatListView.as_view(), name ='laundromat_list'),
     #View the details of a single laundromat
     path('laundromats/<int:pk>', views.LaundromatDetailView.as_view(), name ='laundromat_detail'),
     # Create a laundromat 
@@ -36,12 +36,9 @@ urlpatterns = [
     # Update a laundromat 
     path('laundromats/<int:pk>/update', views.LaundromatUpdate.as_view(), name ='laundromat_update'),
     #delete a laundromat
-    #
-    path('laundromats/<int:pk>/delete/', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
+    path('laundromats/<int:pk>/delete', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
     #new path to create the api listing, takes the request
     path('laundromat-listing/', views.laundromat_listing, name='laundromat_listing'),
-
-    path('laundromats/<int:pk>/delete', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
     # View all machines in a laundromat 
     path('laundromats/<int:pk>/machines', views.MachineListView.as_view(), name ='machine_list'),
     #create a machine

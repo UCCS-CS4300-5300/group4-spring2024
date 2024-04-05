@@ -13,7 +13,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-        <a class="navbar-brand" href="#"><img src="{% static 'images/logo.png' %}" alt="Logo" height="30"></a>
+        <a class="navbar-brand" href="{% url 'home_page' %}"><img src="{% static 'laundry_day_logo.png' %}" alt="Logo" height="70"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -42,6 +42,7 @@
                 </div>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-success my-2 my-sm-0">Sign Up</a>
             {% endif %}
 </nav>
 
@@ -61,7 +62,7 @@
                 <!-- Dynamically generate footer links if needed -->
                 {% block footer %}
                 <div class="col-md-2">
-                    <h5>Logo</h5>
+                    <img src="{% static 'laundry_day_logo_icon.png' %}" alt="Logo" height="70">
                 </div>
                 <div class="col-md-2">
                     <h5>Address</h5>
