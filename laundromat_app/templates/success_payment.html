@@ -1,0 +1,27 @@
+<!-- payment_success.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Payment Success
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h3 class="card-title text-success">Payment Successful</h3>
+                        <p class="card-text">Thank you for your payment!</p>
+                        <p class="card-text">Your transaction has been successfully processed.</p>
+                     <!--   <p class="card-text">Order ID: {{ order_id }}</p>
+                        <p class="card-text">Amount Paid: ${{ amount }}</p>
+                        <p class="card-text">Date: {{ transaction_date }}</p> -->
+                        <a href="{% url 'home_page' %}" class="btn btn-primary">Go to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

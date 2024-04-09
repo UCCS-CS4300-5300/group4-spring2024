@@ -411,4 +411,8 @@ class MachineDetailView(generic.DetailView):
     machine = Machines.objects.filter(pk=machine_pk, laundromat_id=laundromat_pk).first()
     return machine
 
+def successful_payment(request):
+    return render(request, "success_payment.html")
 
+def cancel_payment(request):
+    return render(request, "cancel_payment.html")
