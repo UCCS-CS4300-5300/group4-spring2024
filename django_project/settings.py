@@ -21,7 +21,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 #api key from google( make sure to install in cmd)
-GOOGLE_API_KEY = 'AIzaSyCw2i4lKdSFI7Db7y1LXjbb0G9JYZr09e8'
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Stripe API keys
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
