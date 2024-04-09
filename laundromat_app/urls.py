@@ -49,6 +49,8 @@ urlpatterns = [
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>/delete', views.MachineDeleteView.as_view(), name='machine_delete'),
     #view the details of a single machine in a laundromat
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>', views.MachineDetailView.as_view(), name='machine_detail'),
+    #payment page
+    path('payment/', views.process_payment, name = 'process_payment'),
     #page view upon a payment being submitted successfully
     path('success/', views.successful_payment, name = 'successful_payment'),
     #customer cancels a payment
