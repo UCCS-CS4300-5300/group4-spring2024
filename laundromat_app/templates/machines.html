@@ -21,103 +21,147 @@
               </div>
                 <br/>
                 <span class="badge bg-success text-white">Slots Available</span>
-                <div class="mt-3">
-                    <button type="button" class="btn btn-primary"  onclick="window.location.href='{% url 'reserve_machine' %}'">Make reservation</button>
+
+                    <!--Machine reservation function-->
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary make_reserve" onclick="reservation(1)">Make reservation</button>
+                    </div>
+                    <!--Timer for laundry machine in use-->
+                    <div class="timer-box">
+                        <span class="result" id="result1"></span>
+                    </div>
+                    <!--Buttons for starting and stopping timer-->
+                    <button type="button" class="btn btn-primary startButton">Start</button>
+                    <button type="button" class="btn btn-primary stopButton">Stop</button>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="col-md-4 mb-4">
+        </div>
+        <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-body text-center">
-                  <h5 class="card-title">Washer 1</h5>
-                  <div class="machine-image">
-                    <img src="https://pics.clipartpng.com/midle/White_Washing_Machine_PNG_Clip_Art-3183.png"/>
-                  </div>
-                  <br/>
-                  <span class="badge bg-success text-white">Slots Available</span>
-                  <div class="mt-3">
-                      <button type="button" class="btn btn-primary"  onclick="window.location.href='{% url 'reserve_machine' %}'">Make reservation</button>
-                  </div>
+                    <h5 class="card-title">Washer 2</h5>
+                    <div class="machine-image">
+                        <img src="https://pics.clipartpng.com/midle/White_Washing_Machine_PNG_Clip_Art-3183.png"/>
+                    </div>
+                    <br/>
+                    <span class="badge bg-success text-white">Slots Available</span>
+
+                    <!--Machine reservation function-->
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary make_reserve" onclick="reservation(2)">Make reservation</button>
+                    </div>
+
+                    <!--Timer for laundry machine in use-->
+                    <div class="timer-box">
+                        <span class="result" id="result2"></span>
+                    </div>
+
+                    <!-- Buttons for starting and stopping timer -->
+                    <button type="button" class="btn btn-primary startButton">Start</button>
+                    <button type="button" class="btn btn-primary stopButton">Stop</button>
                 </div>
-              </div>
-          </div>
-          <div class="col-md-4 mb-4">
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-body text-center">
-                  <h5 class="card-title">Washer 1</h5>
-                  <div class="machine-image">
-                    <img src="https://pics.clipartpng.com/midle/White_Washing_Machine_PNG_Clip_Art-3183.png"/>
-                  </div>
-                  <br/>
-                  <span class="badge bg-danger text-white">Unavailable</span>
+                    <h5 class="card-title">Washer 3</h5>
+                    <div class="machine-image">
+                        <img src="https://pics.clipartpng.com/midle/White_Washing_Machine_PNG_Clip_Art-3183.png"/>
+                    </div>
+                    <br/>
+                    <span class="badge bg-danger text-white">Unavailable</span>
 
-                  <!--Timer for laundry machine in use-->
+                    <!--Timer for laundry machine in use-->
+                    <div class="timer-box">
+                        <span class="result" id="result3"></span>
+                    </div>
 
-                  <div class = "timer-box">
-
-                    <span id="result"></span>
-                  </div>
-
-                  <!--Buttons for starting and stopping timer-->
-
-                  <button type ="button" class="btn btn-primary" id="start">Start</button>
-                  <button type ="button" class="btn btn-primary" id="stop">Stop</button>
-
-
-                  <script>
-                    // Create and initialize variables
-                    var current = new Date();
-                    current.setHours(current.getHours() + 1);
-                    let time;
-                    let count = current - new Date();
-                    const result = document.getElementById('result');
-                    const start = document.getElementById('start');
-                    const stop = document.getElementById('stop');
-                    
-                    // Function to start timer
-                    function start_time() {
-                      current = new Date(new Date().getTime() + count);
-                      time = setInterval(decrement_time, 1000);
-                      start.disabled = true;
-                      stop.disabled = false;
-                    }
-                    
-                    // Function to stop timer
-                    function stop_time() {
-                      clearInterval(time);
-                      start.disabled = false;
-                      stop.disabled = true;
-                      count = current - new Date(); 
-                    }
-
-                    // Function to decrement timer by the second
-                    function decrement_time() {
-                      var current_2 = new Date().getTime();
-                      count = current - current_2;
-                      
-                      // Calculate 60 minutes for timer using minutes and seconds
-                      let minutes = Math.floor((count % (1000 * 60 * 60)) / (1000 * 60));
-                      let seconds = Math.floor((count % (1000 * 60)) / 1000);
-                      
-                      // Output countdown timer
-                      result.textContent = minutes + "m " + seconds + "s ";
-                    }
-
-                    start.addEventListener('click', start_time);
-                    stop.addEventListener('click', stop_time);
-                    decrement_time();
-                  </script>
-
-                  <div class="mt-3">
-                      <button type="button" class="btn btn-secondary" disabled>Make reservation</button>
-                  </div>
+                    <!--Buttons for starting and stopping timer-->
+                    <button type="button" class="btn btn-primary startButton">Start</button>
+                    <button type="button" class="btn btn-primary stopButton">Stop</button>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary" disabled>Make reservation</button>
+                    </div>
                 </div>
-              </div>
-          </div>
+            </div>
         </div>
     </div>
-      </div>
-    </div>
- {% endblock %}
-   
+</div>
+</div>
+</div>
+
+  <script>
+  (function() {
+      document.querySelectorAll('.card').forEach(function(card, index) {
+          var current = new Date();
+          current.setHours(current.getHours() + 1);
+          let time;
+          let count = current - new Date();
+          const result = card.querySelector('.result');
+          const start = card.querySelector('.startButton');
+          const stop = card.querySelector('.stopButton');
+
+          // Start the timer
+          function start_time() {
+              current = new Date(new Date().getTime() + count);
+              time = setInterval(decrement_time, 1000);
+              start.disabled = true;
+              stop.disabled = false;
+          }
+
+          // Pause the timer
+          function stop_time() {
+              clearInterval(time);
+              start.disabled = false;
+              stop.disabled = true;
+              count = current - new Date();
+          }
+
+          // Apply timer formula and display output
+          function decrement_time() {
+              var current_2 = new Date().getTime();
+              count = current - current_2;
+              let minutes = Math.floor((count % (1000 * 60 * 60)) / (1000 * 60));
+              let seconds = Math.floor((count % (1000 * 60)) / 1000);
+              result.textContent = minutes + "m " + seconds + "s ";
+          }
+
+          start.addEventListener('click', start_time);
+          stop.addEventListener('click', stop_time);
+          decrement_time();
+      });
+  })();
+
+  // Check if reservation button is cicked
+  function reservation(get_machine) {
+      var button = document.querySelectorAll('.make_reserve')[get_machine - 1];
+      button.disabled = true;
+      localStorage.setItem('check_clicked' + get_machine, 'disabled');
+      window.location.href = '{% url 'reserve_machine' %}';
+
+      // Reload page after reservation is made to start tracking time till reservation ends
+      setTimeout(() => {
+        location.reload();
+    }, 100);
+  }
+
+  window.onload = function() {
+      for (let i = 1; i <= 3; i++) {
+          var set_clicked = localStorage.getItem('check_clicked' + i);
+          var button = document.querySelectorAll('.make_reserve')[i - 1];
+          if (set_clicked === 'disabled') {
+              button.disabled = true;
+
+              // Enable reservation button again after one hour
+              setTimeout((function(btn) {
+                  return function() {
+                      btn.disabled = false;
+                      localStorage.removeItem('check_clicked' + i);
+                  };
+              })(button), 5000);
+          }
+      }
+  };
+  </script>
+{% endblock %}

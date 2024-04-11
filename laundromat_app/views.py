@@ -396,4 +396,3 @@ class MachineDetailView(generic.DetailView):
     machine = Machines.objects.filter(pk=machine_pk, laundromat_id=laundromat_pk).first()
     return machine
 
-

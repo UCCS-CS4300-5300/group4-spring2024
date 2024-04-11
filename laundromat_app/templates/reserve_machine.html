@@ -59,16 +59,22 @@
                   </div>
                 </div>
                 
-                
-                
               </div>
             </div>
           </div>
-          
-          
         </div>
+
+        <!--Button to reserve laundry machine-->
         <div class="mt-2 float-right">
-          <button type="button" class="btn btn-primary btn-sm">Reserve Now</button>
+          <button onclick = "displayMessage()" class="btn btn-primary btn-sm">Reserve Now</button>
+
+        <!--Display success message when reserve button is clicked-->
+        <script>
+            function displayMessage() {
+                alert("Your reservation has been made");
+            }
+        </script>
+
         </div>
     </div>
       </div>
