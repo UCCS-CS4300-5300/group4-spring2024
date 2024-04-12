@@ -5,14 +5,27 @@ Contains urls for different app pages as well as the django admin site
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from .views import CustomLogoutView, CustomLoginView, UnauthorizedView
+from .views import LaundromatDetailView
+
 
 urlpatterns = [
     # Django admin site
     path('admin/', admin.site.urls),
     # Default home page
     path('', views.home_page, name = 'home_page'),
+    #signup page
+    path('signup', views.Signup.as_view(), name='signup'),
+    #login page
+    path('login/', CustomLoginView.as_view(), name='login'),
+    #logoout page
+    path('logout/', CustomLogoutView.as_view(), name='logout'),
+    path('unauthorized/', UnauthorizedView.as_view(), name='unauthorized_view'),
+    
     # Machine list page
     path('machines/', views.machine_list, name = 'machine_list'),
+
+
     # Reserve machine page
     path('reservation/', views.reserve_machine, name = 'reserve_machine'),      
     # Contact us page
@@ -44,5 +57,11 @@ urlpatterns = [
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>/delete', views.MachineDeleteView.as_view(), name='machine_delete'),
     #view the details of a single machine in a laundromat
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>', views.MachineDetailView.as_view(), name='machine_detail'),
+
+
+    path('laundromats/<str:place_id>/', views.LaundromatDetailView.as_view(), name='laundromat_detail'),
+
+
+
 
 ]
