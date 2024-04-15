@@ -18,12 +18,14 @@ from django.conf import settings  # New import
 from django.shortcuts import render
 from django.conf import settings
 import requests
+from django.http import Http404
 
 
 class Signup(CreateView):
   form_class = SignUpForm
   template_name = 'signup.html'
   success_url = reverse_lazy('login')
+
 
   def form_valid(self, form):
     group_name = form.cleaned_data['group']
@@ -53,7 +55,6 @@ class CustomLoginView(LoginView):
       return super().get_success_url()
 
 
-
 def laundromat_listing(request):
     # user's search query (city or zip code)
     search_query = request.GET.get('q', '')
@@ -62,29 +63,36 @@ def laundromat_listing(request):
     laundromats = []
 
     if search_query:
-        #  (make sure to set it in your environment or settings file... I did both)
+        # Use your environment variable or setting for the API key
         api_key = settings.GOOGLE_API_KEY
 
-        # building the Geocoding API request URL
+        # Building the Geocoding API request URL
         geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={search_query}&key={api_key}"
         
-        # requesting to the Geocoding API
+        # Requesting to the Geocoding API
         geocode_response = requests.get(geocode_url).json()
 
         if geocode_response.get('status') == 'OK':
-            # taking the latitude and longitude from the Geocoding API response
+            # Taking the latitude and longitude from the Geocoding API response
             location = geocode_response['results'][0]['geometry']['location']
             latitude, longitude = location['lat'], location['lng']
 
-            # creating the Places API request URL
+            # Creating the Places API request URL
             places_url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius=5000&type=laundry&key={api_key}"
             
-            # request to the Places API
+            # Request to the Places API
             places_response = requests.get(places_url).json()
 
             if places_response.get('status') == 'OK':
-                # takes the places API response data to the laundromats list
-                laundromats = places_response['results']
+                # Takes the places API response data and add to the laundromats list, including place_id
+                laundromats = [
+                    {
+                        'name': place.get('name'),
+                        'vicinity': place.get('vicinity'),
+                        'place_id': place.get('place_id'),  # This is the new line
+                    }
+                    for place in places_response.get('results', [])
+                ]
 
     # Render the template with the list of laundromats from above
     return render(request, 'laundromat_list.html', {'laundromat_list': laundromats})
@@ -223,6 +231,7 @@ class LaundromatDeleteView(UserPassesTestMixin, DeleteView):
 
 
 
+
 class LaundromatListView(generic.ListView):
    model = Laundromat
    template_name = 'laundromat_list.html'
@@ -232,9 +241,40 @@ class LaundromatListView(generic.ListView):
     context['user'] = self.request.user
     return context
 
-class LaundromatDetailView(generic.DetailView):
-   model = Laundromat
-   template_name = 'laundromat_detail.html'
+
+class LaundromatDetailView(generic.View):
+    template_name = 'laundromat_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        # Extract the place_id from the URL kwargs
+        place_id = kwargs.get('place_id')
+        if not place_id:
+            raise Http404("Laundromat not found")
+
+        api_key = settings.GOOGLE_API_KEY
+        # Make sure you have GOOGLE_API_KEY in your settings
+
+        # Fetch the laundromat details using the place_id
+        place_details_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&key={api_key}"
+        response = requests.get(place_details_url).json()
+
+        if response['status'] != 'OK':
+            raise Http404("Laundromat details not found")
+
+        place_details = response.get('result', {})
+
+        # Setup the context for the template
+        context = {
+            'name': place_details.get('name'),
+            'location': place_details.get('formatted_address'),
+            # Static data for demonstration
+            'hours': "9:00 AM - 9:00 PM",
+            'description': "This is a placeholder description for the laundromat. Offering the best laundry services in town with state-of-the-art machines and eco-friendly detergents."
+        }
+
+        # Render the template with the context
+        return render(request, self.template_name, context)
+
 
 #view for the machine creation page
 class MachineCreate(UserPassesTestMixin, CreateView):
@@ -283,9 +323,10 @@ class MachineCreate(UserPassesTestMixin, CreateView):
   def handle_no_permission(self):
     # Customize the redirect behavior for unauthorized users
     return HttpResponseRedirect(reverse('unauthorized_view'))
-  
+
   def get_success_url(self):
     return reverse('home_page')
+
     
 class MachineUpdate(UserPassesTestMixin, UpdateView):
   model = Machines
@@ -341,6 +382,7 @@ class MachineUpdate(UserPassesTestMixin, UpdateView):
     return reverse('home_page')
 
 
+
 class MachineDeleteView(UserPassesTestMixin, DeleteView):
     model = Machines
     # Template for confirmation page
@@ -370,6 +412,7 @@ class MachineDeleteView(UserPassesTestMixin, DeleteView):
     
     def get_success_url(self):
       return reverse('home_page')
+
 
 class MachineListView(generic.ListView):
    model = Machines
@@ -410,4 +453,3 @@ class MachineDetailView(generic.DetailView):
     # Filter by both machine_pk and laundromat_pk to ensure correct machine retrieval
     machine = Machines.objects.filter(pk=machine_pk, laundromat_id=laundromat_pk).first()
     return machine
-

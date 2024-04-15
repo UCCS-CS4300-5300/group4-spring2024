@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from .views import CustomLogoutView, CustomLoginView, UnauthorizedView
+from .views import LaundromatDetailView
+
 
 urlpatterns = [
     # Django admin site
@@ -49,5 +51,5 @@ urlpatterns = [
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>/delete', views.MachineDeleteView.as_view(), name='machine_delete'),
     #view the details of a single machine in a laundromat
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>', views.MachineDetailView.as_view(), name='machine_detail'),
-
+    path('laundromats/<str:place_id>/', views.LaundromatDetailView.as_view(), name='laundromat_detail'),
 ]
