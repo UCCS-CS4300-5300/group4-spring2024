@@ -17,7 +17,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 #api key from google( make sure to install in cmd)
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_API_KEY = 'AIzaSyCw2i4lKdSFI7Db7y1LXjbb0G9JYZr09e8'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -27,6 +27,9 @@ SECRET_KEY = 'django-insecure-c2*20l0u(5&f@-t*j6l3l_egk#fv_or7@38t!1c1xq6vxrx8%-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+ALLOWED_HOSTS = [".replit.dev", ".replit.app"]
+CSRF_TRUSTED_ORIGINS = ["https://*.replit.dev", "https://*.replit.app"]
 
 ALLOWED_HOSTS = []
 
@@ -125,3 +128,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'home_page'

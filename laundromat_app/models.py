@@ -1,9 +1,11 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 class Laundromat(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='laundromats', null=True)
     name = models.CharField(max_length = 100)
     location = models.CharField(max_length = 100)
     hours = models.CharField(max_length = 100)
@@ -48,10 +50,9 @@ class Machines(models.Model):
         return f"{self.machine_choice} - {self.machine_ID}"
 
 
-#if we deicide to move on to resrvation function
-    
-#class Reservation(models.Model):
-   # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    #machine = models.ForeignKey(Machines, on_delete=models.CASCADE)
-   # start_time = models.DateTimeField()
-    #end_time = models.DateTimeField()
+class Reservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machines, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+

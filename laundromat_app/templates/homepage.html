@@ -1,118 +1,91 @@
-<!DOCTYPE html>
+
+<!-- homepage.html -->
 {% extends 'base.html' %}
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+{% block title %}Laundry Day Landing Page{% endblock %}
 
-    <link rel="stylesheet" href="styles.css" />
-    {% block title %}
 
-    <title>Your Laundry App</title>
-    {% endblock title %}
-
-  </head>
-  <body>
-    {% block content %}
-
+{% block content %}
     <!-- Main Section -->
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-8">
-          <h2>Springs Laundromats</h2>
-          <h6 class="mt-4">Making your washes convenient</h6>
+          <h1>Laundry Day</h1>
+          <h4 class="mt-4">Simplify Your Spin Cycle</h4>
           <p class="mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            Welcome to Laundry Day! We strive to make your wash day as simple and easy as possible.
+            Use our search function to find a laundromat close to you and reserve a washer and dryer
+            in advance of your visit. Use our handy timer function so you know when your load is done!
           </p>
         </div>
         <div class="col-md-4">
           <!-- Registration Box -->
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Springs Laundromats</h5>
-              <!-- Registration Form Goes Here -->
-              <form>
-                <div class="form-group">
-                  <label for="username">Full Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Enter your full name"
-                  />
+          {% if not user.is_authenticated %}
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Springs Laundromats</h5>
+                  <!-- Registration Form Goes Here -->
+                  <form class="signup" method="post" action="{% url 'signup' %}"> 
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        name="username" 
+                        placeholder="Enter a username"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email" 
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label> 
+                      <input
+                        type="password" 
+                        class="form-control"
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="confirm_password">Confirm Password</label>
+                      <input
+                        type="password" 
+                        class="form-control"
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        placeholder="Confirm your password"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="group">User Type</label>
+                      <select name="group" id="group" class="form-control">
+                        <option value="Customer">Customer</option>
+                        <option value="Owner">Service Provider</option>
+                      </select>
+                    </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                      Create Account
+                    </button>
+                    <p class="mt-2 text-center">
+                      Already a member? <a href="{% url 'login' %}">Log in</a>
+                    </p>
+                  </form>
                 </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="username">Password</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Enter your password"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="username">Phone</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Enter your phone"
-                  />
-                </div>
-                <div class="form-group">
-                  <label>User Type</label>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="userType"
-                      id="customer"
-                      value="customer"
-                      checked
-                    />
-                    <label class="form-check-label" for="customer"
-                      >Customer</label
-                    >
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="userType"
-                      id="serviceProvider"
-                      value="serviceProvider"
-                    />
-                    <label class="form-check-label" for="serviceProvider"
-                      >Service Provider</label
-                    >
-                  </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">
-                  Create Account
-                </button>
-                <p class="mt-2 text-center">
-                  Already a member? <a href="#">Log in</a>
-                </p>
-              </form>
-            </div>
-          </div>
+              </div>
+              
+          {% endif %}
         </div>
       </div>
 
@@ -219,55 +192,5 @@
         </div>
       </div>
     </div>
-    {% endblock content %}
-    {% block footer %}
+    {% endblock %}
 
-    <!-- Footer -->
-    <footer class="pt-4 mt-4 bg-light">
-      <div class="container">
-        <div class="row">
-          <!-- Footer Columns Go Here -->
-          <div class="col-md-2">
-            <h5>Logo</h5>
-            <ul class="list-unstyled">
-              <li></li>
-            </ul>
-          </div>
-          <div class="col-md-2">
-            <h5>Address</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">Link 4</a></li>
-              <li><a href="#">Link 5</a></li>
-              <li><a href="#">Link 6</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2">
-            <h5>Contact Us</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">Link 7</a></li>
-              <li><a href="#">Link 8</a></li>
-              <li><a href="#">Link 9</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2">
-            <h5>About us</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">Link 10</a></li>
-              <li><a href="#">Link 11</a></li>
-              <li><a href="#">Link 12</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <h5>Socials</h5>
-            <p>Contact Information and Social Links</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-    {% endblock footer %}
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
-</html>

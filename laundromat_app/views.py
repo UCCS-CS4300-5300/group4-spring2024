@@ -18,15 +18,14 @@ from django.conf import settings  # New import
 from django.shortcuts import render
 from django.conf import settings
 import requests
-
 from django.http import Http404
-
 
 
 class Signup(CreateView):
   form_class = SignUpForm
   template_name = 'signup.html'
-  success_url = reverse_lazy('home_page')
+  success_url = reverse_lazy('login')
+
 
   def form_valid(self, form):
     group_name = form.cleaned_data['group']
@@ -98,6 +97,7 @@ def laundromat_listing(request):
     # Render the template with the list of laundromats from above
     return render(request, 'laundromat_list.html', {'laundromat_list': laundromats})
 
+
 class UnauthorizedView(TemplateView):
     template_name = 'unauthorized.html'
 
@@ -165,7 +165,7 @@ class LaundromatCreate(UserPassesTestMixin, CreateView):
     return HttpResponseRedirect(reverse('unauthorized_view'))
 
   def get_success_url(self):
-      return reverse('laundromat_list')
+      return reverse('home_page')
 
   def form_valid(self, form):
       # Save the form data to the database
@@ -199,12 +199,15 @@ class LaundromatUpdate(UserPassesTestMixin, UpdateView):
         # Fetch the existing Laundromat instance
         laundromat = self.get_object()
         # Populate the form fields with the instance's current values
-        return {'laundromat_name': laundromat.name, 'location': laundromat.location}
+        return {'name': laundromat.name, 'location': laundromat.location, 'hours': laundromat.hours, 'description': laundromat.description}
 
     def form_valid(self, form):
         # Save the form data to the database
         form.save()
         return super().form_valid(form)
+    
+    def get_success_url(self):
+      return reverse('home_page')
 
 class LaundromatDeleteView(UserPassesTestMixin, DeleteView):
     model = Laundromat
@@ -222,6 +225,10 @@ class LaundromatDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
       # Customize the redirect behavior for unauthorized users
       return HttpResponseRedirect(reverse('unauthorized_view'))
+    
+    def get_success_url(self):
+      return reverse('home_page')
+
 
 
 
@@ -233,7 +240,6 @@ class LaundromatListView(generic.ListView):
     context = super().get_context_data(**kwargs)
     context['user'] = self.request.user
     return context
-
 
 
 class LaundromatDetailView(generic.View):
@@ -268,7 +274,6 @@ class LaundromatDetailView(generic.View):
 
         # Render the template with the context
         return render(request, self.template_name, context)
-
 
 
 #view for the machine creation page
@@ -318,6 +323,10 @@ class MachineCreate(UserPassesTestMixin, CreateView):
   def handle_no_permission(self):
     # Customize the redirect behavior for unauthorized users
     return HttpResponseRedirect(reverse('unauthorized_view'))
+
+  def get_success_url(self):
+    return reverse('home_page')
+
     
 class MachineUpdate(UserPassesTestMixin, UpdateView):
   model = Machines
@@ -368,6 +377,10 @@ class MachineUpdate(UserPassesTestMixin, UpdateView):
   def handle_no_permission(self):
     # Customize the redirect behavior for unauthorized users
     return HttpResponseRedirect(reverse('unauthorized_view'))
+  
+  def get_success_url(self):
+    return reverse('home_page')
+
 
 
 class MachineDeleteView(UserPassesTestMixin, DeleteView):
@@ -396,6 +409,10 @@ class MachineDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
       # Customize the redirect behavior for unauthorized users
       return HttpResponseRedirect(reverse('unauthorized_view'))
+    
+    def get_success_url(self):
+      return reverse('home_page')
+
 
 class MachineListView(generic.ListView):
    model = Machines

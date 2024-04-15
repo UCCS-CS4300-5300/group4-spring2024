@@ -21,11 +21,8 @@ urlpatterns = [
     #logoout page
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('unauthorized/', UnauthorizedView.as_view(), name='unauthorized_view'),
-    
     # Machine list page
     path('machines/', views.machine_list, name = 'machine_list'),
-
-
     # Reserve machine page
     path('reservation/', views.reserve_machine, name = 'reserve_machine'),      
     # Contact us page
@@ -33,7 +30,7 @@ urlpatterns = [
     # About page
     path('about/', views.about, name = 'about'),
     # View all laundromats 
-    path('laundromats/', views.LaundromatListView.as_view(), name ='laundromat_list'),
+    path('laundromats', views.LaundromatListView.as_view(), name ='laundromat_list'),
     #View the details of a single laundromat
     path('laundromats/<int:pk>', views.LaundromatDetailView.as_view(), name ='laundromat_detail'),
     # Create a laundromat 
@@ -41,12 +38,9 @@ urlpatterns = [
     # Update a laundromat 
     path('laundromats/<int:pk>/update', views.LaundromatUpdate.as_view(), name ='laundromat_update'),
     #delete a laundromat
-    #
-    path('laundromats/<int:pk>/delete/', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
+    path('laundromats/<int:pk>/delete', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
     #new path to create the api listing, takes the request
     path('laundromat-listing/', views.laundromat_listing, name='laundromat_listing'),
-
-    path('laundromats/<int:pk>/delete', views.LaundromatDeleteView.as_view(), name='laundromat_delete'),
     # View all machines in a laundromat 
     path('laundromats/<int:pk>/machines', views.MachineListView.as_view(), name ='machine_list'),
     #create a machine
@@ -57,11 +51,5 @@ urlpatterns = [
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>/delete', views.MachineDeleteView.as_view(), name='machine_delete'),
     #view the details of a single machine in a laundromat
     path('laundromats/<int:laundromat_pk>/machines/<int:pk>', views.MachineDetailView.as_view(), name='machine_detail'),
-
-
     path('laundromats/<str:place_id>/', views.LaundromatDetailView.as_view(), name='laundromat_detail'),
-
-
-
-
 ]

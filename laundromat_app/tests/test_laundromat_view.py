@@ -1,9 +1,9 @@
 from django.test import TestCase
-from .models import Machines, Laundromat
+from laundromat_app.models import Machines, Laundromat
 from django.urls import reverse
 #used for api callings and testing 
 from unittest.mock import patch, MagicMock
-from .views import laundromat_listing
+from laundromat_app.views import laundromat_listing
 
 
 class URLTest(TestCase):

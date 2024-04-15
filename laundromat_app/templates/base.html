@@ -12,25 +12,40 @@
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><img src="{% static 'images/logo.png' %}" alt="Logo" height="30"></a>
+
+        <a class="navbar-brand" href="{% url 'home_page' %}"><img src="{% static 'laundry_day_logo.png' %}" alt="Logo" height="70"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="{% url 'home_page' %}">Home</a></li>
+
                 <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a></li>
             </ul>
             <!-- Search Form within the navbar collapse to ensure it is responsive -->
-            <form class="form-inline my-2 my-lg-0" action="{% url 'laundromat_listing' %}" method="get">
+            <form class="form-inline my-2 my-lg-0 mr-3" action="{% url 'laundromat_listing' %}" method="get">
                 <input class="form-control mr-sm-2 custom-search-bar" type="search" placeholder="City or Zip code" aria-label="Search" name="q">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
-        </div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="button">Account</button>
-    </nav>
+            
+            {% if user.is_authenticated %}
+                <div class="navbar-text"> <!-- Center the welcome message -->
+                    <p class="text-center font-weight-bold mb-0 mr-3 d-inline-block">Welcome, {{ request.user.username }}!</p>
+                    <button class="btn btn-outline-success my-2 my-sm-0 d-inline-block">Account</button>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
+                    </form>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-success my-2 my-sm-0">Sign Up</a>
+            {% endif %}
+</nav>
+
 
     <!-- Placeholder for page-specific content -->
     <div class="container mt-4">
@@ -40,14 +55,14 @@
     </div>
 
     <!-- Footer -->
-    <footer class="pt-4 mt-auto bg-light">
+    <footer>
         <div class="container">
             <div class="row">
                 <!-- Footer content here -->
                 <!-- Dynamically generate footer links if needed -->
                 {% block footer %}
                 <div class="col-md-2">
-                    <h5>Logo</h5>
+                    <img src="{% static 'laundry_day_logo_icon.png' %}" alt="Logo" height="70">
                 </div>
                 <div class="col-md-2">
                     <h5>Address</h5>
