@@ -14,11 +14,11 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LogoutView, LoginView
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
-from django.conf import settings  # New import
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
-import requests
+import requests, stripe
 from django.http import Http404
+from django.contrib import messages
 
 
 class Signup(CreateView):
@@ -453,3 +453,76 @@ class MachineDetailView(generic.DetailView):
     # Filter by both machine_pk and laundromat_pk to ensure correct machine retrieval
     machine = Machines.objects.filter(pk=machine_pk, laundromat_id=laundromat_pk).first()
     return machine
+
+class ProcessPayment(UserPassesTestMixin, TemplateView):
+  template_name = "payment.html"
+
+  def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      stripe_public_key = settings.STRIPE_PUBLIC_KEY
+      context['stripe_public_key'] = stripe_public_key
+      return context
+
+  def post(self, request):
+      stripe.api_key = settings.STRIPE_SECRET_KEY
+
+      if request.method == 'POST':
+          # Retrieve payment details from the form
+          token = request.POST.get('stripeToken')
+          #amount = request.POST.get('amount')  # Amount in cents
+          amount = 1000  # $10.00 in cents FOR TESTING
+          description = 'Payment for laundry services'  # Description of the payment
+
+          try:
+              # Charge the customer's card using Stripe's API
+              charge = stripe.Charge.create(
+                  amount=amount,
+                  currency='usd',
+                  description=description,
+                  source=token,
+              )
+              # If payment is successful, redirect to the payment success page
+              return redirect('successful_payment')
+
+          except stripe.error.CardError as e:
+              # Display error message if there's an issue with the card
+              messages.error(request, f'Error: {e.error.message}')
+
+          except stripe.error.StripeError as e:
+              # Display generic error message for other Stripe-related errors
+              messages.error(request, 'Payment processing failed. Please try again later.')
+
+      # Render the payment page template with the context
+      return self.render_to_response(self.get_context_data())
+
+  def test_func(self):
+        # Check if the current user is in the "Customer" group
+        return self.request.user.groups.filter(name='Customer').exists()
+
+  def handle_no_permission(self):
+      # Customize the redirect behavior for unauthorized users
+      return HttpResponseRedirect(reverse('unauthorized_view'))
+
+#redirect to success page when payment goes through
+class SuccessfulPayment(UserPassesTestMixin, TemplateView):
+    template_name = "success_payment.html"
+
+    def test_func(self):
+        # Check if the current user is in the "Customer" group
+        return self.request.user.groups.filter(name='Customer').exists()
+
+    def handle_no_permission(self):
+      # Customize the redirect behavior for unauthorized users
+      return HttpResponseRedirect(reverse('unauthorized_view'))
+
+#if customer cancels payment instead of submitting it
+class CancelPayment(UserPassesTestMixin, TemplateView):
+    template_name = "cancel_payment.html"
+
+    def test_func(self):
+        # Check if the current user is in the "Customer" group
+        return self.request.user.groups.filter(name='Customer').exists()
+
+    def handle_no_permission(self):
+      # Customize the redirect behavior for unauthorized users
+      return HttpResponseRedirect(reverse('unauthorized_view'))
