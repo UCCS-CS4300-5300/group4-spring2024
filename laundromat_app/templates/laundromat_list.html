@@ -1,3 +1,6 @@
+
+<!-- laundromat_list.html -->
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -7,12 +10,12 @@
   {% if laundromat_list %}
     <div class="list-group">
       {% for laundromat in laundromat_list %}
+        <!-- Wrap the laundromat name with an anchor tag linking to the detail page -->
         <div class="list-group-item">
-          <h5>{{ laundromat.name }}</h5>
+          <a href="{% url 'laundromat_detail' laundromat.place_id %}">
+            <h5>{{ laundromat.name }}</h5>
+          </a>
           <p>{{ laundromat.vicinity }}</p>
-        
-          <!--  laundromat.rating or laundromat user rating -->
-          <!-- once we install that function i believe it would go here-->
         </div>
       {% endfor %}
     </div>
@@ -22,4 +25,6 @@
 
 
 </div>
+
 {% endblock %}
+

@@ -5,10 +5,10 @@
 
 {% block content %}
 <h1>Confirm Deletion</h1>
-<p>Are you sure you want to delete {{laundromat.name}}?</p>
+<p>Are you sure you want to delete {{machine.machine_ID}}?</p>
 <form method="post">
   {% csrf_token %}
   <button type="submit" class="btn btn-danger">Confirm</button>
-  <a href="{% url 'laundromat_list' %}" class="btn btn-secondary">Cancel</a>
+  <a href="{% url 'home_page' %}" class="btn btn-secondary">Cancel</a>
 </form>
 {% endblock %}

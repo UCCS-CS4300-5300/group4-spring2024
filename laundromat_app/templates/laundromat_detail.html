@@ -1,14 +1,40 @@
-<!-- laundromat_detail.html -->
+
 {% extends 'base.html' %}
 
-{% block title %}{{ laundromat.name }}{% endblock %}
+{% block title %}{{ name }}{% endblock %}
 
 {% block content %}
-<h1>{{laundromat.name}}</h1>
-<form method="post">
-  {% csrf_token %}
+<div class="container">
+    <h2>{{ name }}</h2>
+    <p><strong>Location:</strong> {{ location }}</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Book Washer</h3>
+            <ul class="list-group mb-3">
+                {% for washer in washers %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ washer.machine_type }} - {{ washer.machine_ID }}
+                        <button class="btn btn-primary">Book</button>
+                    </li>
+                {% empty %}
+                    <p>No washers available.</p>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Book Dryer</h3>
+            <ul class="list-group">
+                {% for dryer in dryers %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ dryer.machine_type }} - {{ dryer.machine_ID }}
+                        <button class="btn btn-primary">Book</button>
+                    </li>
+                {% empty %}
+                    <p>No dryers available.</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 
-  <p><strong>Location:</strong> {{ laundromat.location }}</p>
-  <p><strong>Hours of Operation:</strong> {{ laundromat.hours }}</p>
-  <p><strong>Description:</strong> {{ laundromat.description }}</p>
 {% endblock %}

@@ -30,5 +30,8 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+  <br><br>
+  <a href="{% url 'machine_delete' form.instance.laundromat.pk form.instance.pk  %}" class="btn btn-danger">Delete Machine</a>
+
 </div>
 {% endblock %}

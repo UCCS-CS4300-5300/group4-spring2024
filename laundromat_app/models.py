@@ -50,10 +50,9 @@ class Machines(models.Model):
         return f"{self.machine_choice} - {self.machine_ID}"
 
 
-#if we deicide to move on to resrvation function
-    
-#class Reservation(models.Model):
-   # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    #machine = models.ForeignKey(Machines, on_delete=models.CASCADE)
-   # start_time = models.DateTimeField()
-    #end_time = models.DateTimeField()
+class Reservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machines, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
