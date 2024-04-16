@@ -6,7 +6,8 @@
 
 
 {% block content %}
-    <!-- Main Section -->
+    <!-- Main Section -->      
+
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-8">
@@ -159,7 +160,8 @@
           <div class="col-md-4 mb-4">
             <div
               class="card laundromats-list"
-              onclick="window.location.href='{% url 'machine_list' %}'"
+              id = "laundromat_list"
+              onclick="window.location.href='{% url 'machine_list' pk=3 %}'"              
             >
               <div class="card-body">
                 <h5 class="card-title">Crossroads Laundry Services</h5>
@@ -175,7 +177,8 @@
           <div class="col-md-4 mb-4">
             <div
               class="card laundromats-list"
-              onclick="window.location.href='{% url 'machine_list' %}'"
+              id = "laundromat_list"
+              onclick="window.location.href='{% url 'machine_list' pk=3 %}'"
             >
               <div class="card-body">
                 <h5 class="card-title">Super Laundry</h5>
@@ -191,7 +194,8 @@
           <div class="col-md-4 mb-4">
             <div
               class="card laundromats-list"
-              onclick="window.location.href='{% url 'machine_list' %}'"
+              id = "laundromat_list"
+              onclick="window.location.href='{% url 'machine_list' pk=3 %}'"              
             >
               <div class="card-body">
                 <h5 class="card-title">Smooth Laundry Services</h5>
