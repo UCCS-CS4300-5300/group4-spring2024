@@ -2,21 +2,18 @@
 
 {% extends 'base.html' %} 
 
-{% block title %}Machines in {{ laundromat.name}}{%endblock %} 
-
-
-
+{% block title %}Machines at {{ laundromat.name }}{% endblock %} 
 
 {% block content %}
 
 <div class="container">
-  <h1 class="mt-4">Machines in {{ laundromat.name }}</h1>
+  <h1 class="mt-4">Machines at {{ laundromat.name }}</h1>
   {% if machine_list %}
   <div class="list-group mt-4">
     <div class="row mt-4">
       {% for machine in machine_list %}
-      <div class="col-md-3 mb-2">
-        <div class="card">
+      <div class="col-md-4 mb-2">
+        <div class="card h-100">
           <div class="card-body text-center">
             <h5 class="card-title">{{ machine.machine_choice }}</h5>
             <p class="mb-1">Machine ID: {{ machine.machine_ID }}</p>
@@ -42,7 +39,7 @@
   </div>
   {% else %}
   <div class="alert alert-info mt-4" role="alert">
-    There are no machines in {{ laundromat.name }}.
+    There are no machines available in {{ laundromat.name }}.
   </div>
   {% endif %}
 </div>

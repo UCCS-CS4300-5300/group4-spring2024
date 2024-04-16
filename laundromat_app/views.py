@@ -14,16 +14,18 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LogoutView, LoginView
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
-from django.conf import settings  # New import
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
-import requests
+import requests, stripe
+from django.http import Http404
+from django.contrib import messages
 
 
 class Signup(CreateView):
   form_class = SignUpForm
   template_name = 'signup.html'
-  success_url = reverse_lazy('home_page')
+  success_url = reverse_lazy('login')
+
 
   def form_valid(self, form):
     group_name = form.cleaned_data['group']
@@ -53,7 +55,6 @@ class CustomLoginView(LoginView):
       return super().get_success_url()
 
 
-
 def laundromat_listing(request):
     # user's search query (city or zip code)
     search_query = request.GET.get('q', '')
@@ -62,29 +63,36 @@ def laundromat_listing(request):
     laundromats = []
 
     if search_query:
-        #  (make sure to set it in your environment or settings file... I did both)
+        # Use your environment variable or setting for the API key
         api_key = settings.GOOGLE_API_KEY
 
-        # building the Geocoding API request URL
+        # Building the Geocoding API request URL
         geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={search_query}&key={api_key}"
         
-        # requesting to the Geocoding API
+        # Requesting to the Geocoding API
         geocode_response = requests.get(geocode_url).json()
 
         if geocode_response.get('status') == 'OK':
-            # taking the latitude and longitude from the Geocoding API response
+            # Taking the latitude and longitude from the Geocoding API response
             location = geocode_response['results'][0]['geometry']['location']
             latitude, longitude = location['lat'], location['lng']
 
-            # creating the Places API request URL
+            # Creating the Places API request URL
             places_url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius=5000&type=laundry&key={api_key}"
             
-            # request to the Places API
+            # Request to the Places API
             places_response = requests.get(places_url).json()
 
             if places_response.get('status') == 'OK':
-                # takes the places API response data to the laundromats list
-                laundromats = places_response['results']
+                # Takes the places API response data and add to the laundromats list, including place_id
+                laundromats = [
+                    {
+                        'name': place.get('name'),
+                        'vicinity': place.get('vicinity'),
+                        'place_id': place.get('place_id'),  # This is the new line
+                    }
+                    for place in places_response.get('results', [])
+                ]
 
     # Render the template with the list of laundromats from above
     return render(request, 'laundromat_list.html', {'laundromat_list': laundromats})
@@ -157,7 +165,7 @@ class LaundromatCreate(UserPassesTestMixin, CreateView):
     return HttpResponseRedirect(reverse('unauthorized_view'))
 
   def get_success_url(self):
-      return reverse('laundromat_list')
+      return reverse('home_page')
 
   def form_valid(self, form):
       # Save the form data to the database
@@ -191,12 +199,15 @@ class LaundromatUpdate(UserPassesTestMixin, UpdateView):
         # Fetch the existing Laundromat instance
         laundromat = self.get_object()
         # Populate the form fields with the instance's current values
-        return {'laundromat_name': laundromat.name, 'location': laundromat.location}
+        return {'name': laundromat.name, 'location': laundromat.location, 'hours': laundromat.hours, 'description': laundromat.description}
 
     def form_valid(self, form):
         # Save the form data to the database
         form.save()
         return super().form_valid(form)
+    
+    def get_success_url(self):
+      return reverse('home_page')
 
 class LaundromatDeleteView(UserPassesTestMixin, DeleteView):
     model = Laundromat
@@ -214,6 +225,10 @@ class LaundromatDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
       # Customize the redirect behavior for unauthorized users
       return HttpResponseRedirect(reverse('unauthorized_view'))
+    
+    def get_success_url(self):
+      return reverse('home_page')
+
 
 
 
@@ -226,9 +241,40 @@ class LaundromatListView(generic.ListView):
     context['user'] = self.request.user
     return context
 
-class LaundromatDetailView(generic.DetailView):
-   model = Laundromat
-   template_name = 'laundromat_detail.html'
+
+class LaundromatDetailView(generic.View):
+    template_name = 'laundromat_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        # Extract the place_id from the URL kwargs
+        place_id = kwargs.get('place_id')
+        if not place_id:
+            raise Http404("Laundromat not found")
+
+        api_key = settings.GOOGLE_API_KEY
+        # Make sure you have GOOGLE_API_KEY in your settings
+
+        # Fetch the laundromat details using the place_id
+        place_details_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&key={api_key}"
+        response = requests.get(place_details_url).json()
+
+        if response['status'] != 'OK':
+            raise Http404("Laundromat details not found")
+
+        place_details = response.get('result', {})
+
+        # Setup the context for the template
+        context = {
+            'name': place_details.get('name'),
+            'location': place_details.get('formatted_address'),
+            # Static data for demonstration
+            'hours': "9:00 AM - 9:00 PM",
+            'description': "This is a placeholder description for the laundromat. Offering the best laundry services in town with state-of-the-art machines and eco-friendly detergents."
+        }
+
+        # Render the template with the context
+        return render(request, self.template_name, context)
+
 
 #view for the machine creation page
 class MachineCreate(UserPassesTestMixin, CreateView):
@@ -277,6 +323,10 @@ class MachineCreate(UserPassesTestMixin, CreateView):
   def handle_no_permission(self):
     # Customize the redirect behavior for unauthorized users
     return HttpResponseRedirect(reverse('unauthorized_view'))
+
+  def get_success_url(self):
+    return reverse('home_page')
+
     
 class MachineUpdate(UserPassesTestMixin, UpdateView):
   model = Machines
@@ -327,6 +377,10 @@ class MachineUpdate(UserPassesTestMixin, UpdateView):
   def handle_no_permission(self):
     # Customize the redirect behavior for unauthorized users
     return HttpResponseRedirect(reverse('unauthorized_view'))
+  
+  def get_success_url(self):
+    return reverse('home_page')
+
 
 
 class MachineDeleteView(UserPassesTestMixin, DeleteView):
@@ -355,6 +409,10 @@ class MachineDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
       # Customize the redirect behavior for unauthorized users
       return HttpResponseRedirect(reverse('unauthorized_view'))
+    
+    def get_success_url(self):
+      return reverse('home_page')
+
 
 class MachineListView(generic.ListView):
    model = Machines
@@ -396,3 +454,75 @@ class MachineDetailView(generic.DetailView):
     machine = Machines.objects.filter(pk=machine_pk, laundromat_id=laundromat_pk).first()
     return machine
 
+class ProcessPayment(UserPassesTestMixin, TemplateView):
+  template_name = "payment.html"
+
+  def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      stripe_public_key = settings.STRIPE_PUBLIC_KEY
+      context['stripe_public_key'] = stripe_public_key
+      return context
+
+  def post(self, request):
+      stripe.api_key = settings.STRIPE_SECRET_KEY
+
+      if request.method == 'POST':
+          # Retrieve payment details from the form
+          token = request.POST.get('stripeToken')
+          #amount = request.POST.get('amount')  # Amount in cents
+          amount = 1000  # $10.00 in cents FOR TESTING
+          description = 'Payment for laundry services'  # Description of the payment
+
+          try:
+              # Charge the customer's card using Stripe's API
+              charge = stripe.Charge.create(
+                  amount=amount,
+                  currency='usd',
+                  description=description,
+                  source=token,
+              )
+              # If payment is successful, redirect to the payment success page
+              return redirect('successful_payment')
+
+          except stripe.error.CardError as e:
+              # Display error message if there's an issue with the card
+              messages.error(request, f'Error: {e.error.message}')
+
+          except stripe.error.StripeError as e:
+              # Display generic error message for other Stripe-related errors
+              messages.error(request, 'Payment processing failed. Please try again later.')
+
+      # Render the payment page template with the context
+      return self.render_to_response(self.get_context_data())
+
+  def test_func(self):
+        # Check if the current user is in the "Customer" group
+        return self.request.user.groups.filter(name='Customer').exists()
+
+  def handle_no_permission(self):
+      # Customize the redirect behavior for unauthorized users
+      return HttpResponseRedirect(reverse('unauthorized_view'))
+
+#redirect to success page when payment goes through
+class SuccessfulPayment(UserPassesTestMixin, TemplateView):
+    template_name = "success_payment.html"
+
+    def test_func(self):
+        # Check if the current user is in the "Customer" group
+        return self.request.user.groups.filter(name='Customer').exists()
+
+    def handle_no_permission(self):
+      # Customize the redirect behavior for unauthorized users
+      return HttpResponseRedirect(reverse('unauthorized_view'))
+
+#if customer cancels payment instead of submitting it
+class CancelPayment(UserPassesTestMixin, TemplateView):
+    template_name = "cancel_payment.html"
+
+    def test_func(self):
+        # Check if the current user is in the "Customer" group
+        return self.request.user.groups.filter(name='Customer').exists()
+
+    def handle_no_permission(self):
+      # Customize the redirect behavior for unauthorized users
+      return HttpResponseRedirect(reverse('unauthorized_view'))
