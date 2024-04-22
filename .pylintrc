@@ -1,0 +1,7 @@
+[MASTER]
+disable=
+    C0114, # missing-module-docstring
+    missing-docstring, 
+    empty-docstring,
+    line-too-long,
+    invalid-name,
