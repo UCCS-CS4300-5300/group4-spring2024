@@ -480,7 +480,7 @@ class ProcessPayment(UserPassesTestMixin, TemplateView):
                 # Display error message if there's an issue with the card
                 messages.error(request, f'Error: {e.error.message}')
 
-            except stripe.error.StripeError as e:
+            except stripe.error.StripeError:
                 # Display generic error message for other Stripe-related errors
                 messages.error(request, 'Payment processing failed. Please try again later.')
 

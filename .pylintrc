@@ -1,7 +1,11 @@
 [MASTER]
 disable=
-    C0114, # missing-module-docstring
     missing-docstring, 
     empty-docstring,
     line-too-long,
     invalid-name,
+    too-many-ancestors,
+    too-few-public-methods,
+
+load-plugins=pylint_django
+django-settings-module=django_project.settings
