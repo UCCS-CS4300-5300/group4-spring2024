@@ -24,7 +24,7 @@ urlpatterns = [
     # Machine list page
     #path('machines/', views.machine_list, name = 'machine_list'),
     # Reserve machine page
-    path('reservation/', views.reserve_machine, name = 'reserve_machine'),      
+    path('reserve_machine/', views.reserve_machine, name='reserve_machine'),     
     # Contact us page
     path('contact/', views.contact_us, name = 'contact_us'),
     # About page
