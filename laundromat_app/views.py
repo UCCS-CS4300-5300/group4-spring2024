@@ -118,10 +118,32 @@ def home_page(request):
             }
             return render(request, 'owner_homepage.html', context)
         else:
-            return render(request, 'homepage.html')
+            # Query laundromats owned by the current user
+            laundromats = Laundromat.objects.all()
+            
+            # Fetch all machines for each laundromat
+            for laundromat in laundromats:
+                laundromat.machines = laundromat.machines_set.all()
+
+            # Pass the queryset to the template context
+            context = {
+                'laundromats': laundromats
+            }
+            return render(request, 'homepage.html', context)
     else:
         # Handle anonymous users 
-        return render(request, 'homepage.html')
+        # Query laundromats owned by the current user
+        laundromats = Laundromat.objects.all()
+            
+        # Fetch all machines for each laundromat
+        for laundromat in laundromats:
+          laundromat.machines = laundromat.machines_set.all()
+
+        # Pass the queryset to the template context
+        context = {
+          'laundromats': laundromats
+        }
+        return render(request, 'homepage.html', context)
 
 def machine_list(request):
     return render(request, 'machines.html')

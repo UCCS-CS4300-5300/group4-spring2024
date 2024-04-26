@@ -1,9 +1,6 @@
-/* Add your custom styles here */
-
 body {
   font-family: "Arial", sans-serif;
-  overflow-y: auto; /* Enable vertical scrolling for the entire page */
-  margin-bottom: 100px; /* Add space between body content and footer */
+  overflow-y: auto;   
 }
 
 /* Style for the Registration Box */
@@ -22,7 +19,8 @@ footer {
   color: #777;
   background-color: #f8f9fa;
   width: 100%;
-  /*bottom: 0; */
+  bottom: 0;
+  position: relative;
   left: 0;
   text-align: center;
 }

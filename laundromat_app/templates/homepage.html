@@ -135,64 +135,32 @@
         </div>
       </div>
 
-      <hr class="mt-3" />
+      <hr class="mt-3" />    
+    
 
       <!-- Our Laundromats Section -->
       <div class="text-center mt-4">
         <h2>Our Laundromats</h2>
         <!-- Laundromat Cards or Carousel Go Here -->
         <div class="row mt-4">
+          {% for laundromat in laundromats %}
           <div class="col-md-4 mb-4">
             <div
               class="card laundromats-list"
               id = "laundromat_list"
-              onclick="window.location.href='{% url 'machine_list' pk=3 %}'"              
+              onclick="window.location.href='{% url 'machine_list' laundromat.pk %}'"                         
             >
               <div class="card-body">
-                <h5 class="card-title">Crossroads Laundry Services</h5>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor Lorem ipsum dolor sit amet, consectetur
-                  adipiscing elit, sed do eiusmod tempor Lorem ipsum dolor sit
-                  amet, consectetur adipiscing elit, sed do eiusmod tempor
-                </p>
+                <h5 class="card-title">{{ laundromat.name }}</h5>
+                <p class="card-text">Location: {{ laundromat.location }}</p>
+                <p class="card-text">Hours: {{ laundromat.hours }}</p>
+                <p class="card-text">Description: {{ laundromat.description }}</p>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
-            <div
-              class="card laundromats-list"
-              id = "laundromat_list"
-              onclick="window.location.href='{% url 'machine_list' pk=3 %}'"
-            >
-              <div class="card-body">
-                <h5 class="card-title">Super Laundry</h5>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor Lorem ipsum dolor sit amet, consectetur
-                  adipiscing elit, sed do eiusmod tempor Lorem ipsum dolor sit
-                  amet, consectetur adipiscing elit, sed do eiusmod tempor
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 mb-4">
-            <div
-              class="card laundromats-list"
-              id = "laundromat_list"
-              onclick="window.location.href='{% url 'machine_list' pk=3 %}'"              
-            >
-              <div class="card-body">
-                <h5 class="card-title">Smooth Laundry Services</h5>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor Lorem ipsum dolor sit amet, consectetur
-                  adipiscing elit, sed do eiusmod tempor Lorem ipsum dolor sit
-                  amet, consectetur adipiscing elit, sed do eiusmod tempor
-                </p>
-              </div>
-            </div>
-          </div>
+          {% endfor %}     
+          
+         
         </div>
       </div>
     </div>
