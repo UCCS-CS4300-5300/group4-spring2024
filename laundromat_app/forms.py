@@ -1,10 +1,8 @@
-from django import forms
-from .models import *
-from .models import Machines
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-#from .models import Reservation #if we move on uncomment
+from django import forms
+from .models import Machines, Laundromat
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
@@ -23,7 +21,8 @@ class LaundromatForm(forms.ModelForm):
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, label='Your Name')
     email = forms.EmailField(label='Your Email')
-    message = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'maxlength': '200'}), label='Leave a message for our team')
+    message = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'maxlength': '200'}),
+                              label='Leave a message for our team')
 
 # for creating/editing associated laundromat (NOT RESVERATION!)
 class MachineForm(forms.ModelForm):
@@ -36,7 +35,8 @@ class MachineForm(forms.ModelForm):
             'status': forms.HiddenInput()
         }
 
-#uncomment if we move on, ideally we do a view with 45 time limit leaving time to swap or clean machines
+#uncomment if we move on, ideally we do a view with 45 time limit
+#leaving time to swap or clean machines
 #class ReservationForm(forms.ModelForm):
  #   class Meta:
   #      model = Reservation
