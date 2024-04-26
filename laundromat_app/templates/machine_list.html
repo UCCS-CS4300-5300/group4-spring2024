@@ -11,7 +11,6 @@
   {% if machine_list %}
   <div class="list-group mt-4">
     <div class="row mt-4">
-      {% for machine in machine_list %}
       <div class="col-md-4 mb-2">
         <div class="card h-100">
           <div class="card-body text-center">
@@ -22,11 +21,11 @@
             <span class="badge bg-success text-white">Available</span>
               <!--Machine reservation function-->
               <div class="mt-3">
-                <button type="button" class="btn btn-primary make_reserve" onclick="reservation(1)">Make reservation</button>
+                <button type="button" class="btn btn-primary make_reserve">Make reservation</button>
             </div>
             <!--Timer for laundry machine in use-->
             <div class="timer-box">
-                <span class="result" id="result1"></span>
+                <span class="result"></span>
             </div>
             <!--Buttons for starting and stopping timer-->
             <button type="button" class="btn btn-primary startButton">Start</button>
@@ -34,7 +33,6 @@
           </div>
         </div>
       </div>
-      {% endfor %}
     </div>
   </div>
   {% else %}
@@ -46,91 +44,84 @@
 
 <script>
   (function() {
-      document.querySelectorAll('.card').forEach(function(card, index) {
-          var current = new Date();
-          current.setHours(current.getHours() + 1);
-          let time;
-          let count = current - new Date();
-          const result = card.querySelector('.result');
-          const start = card.querySelector('.startButton');
-          const stop = card.querySelector('.stopButton');
+      var current = new Date();
+      current.setHours(current.getHours() + 1);
+      let time;
+      let count = current - new Date();
+      const result = document.querySelector('.result');
+      const start = document.querySelector('.startButton');
+      const stop = document.querySelector('.stopButton');
 
-          // Start the timer
-          function start_time() {
-              current = new Date(new Date().getTime() + count);
-              time = setInterval(decrement_time, 1000);
-              start.disabled = true;
-              stop.disabled = false;
-          }
+      // Start the timer
+      function start_time() {
+          current = new Date(new Date().getTime() + count);
+          time = setInterval(decrement_time, 1000);
+          start.disabled = true;
+          stop.disabled = false;
+      }
 
-          // Pause the timer
-          function stop_time() {
-              clearInterval(time);
-              start.disabled = false;
-              stop.disabled = true;
-              count = current - new Date();
-          }
+      // Pause the timer
+      function stop_time() {
+          clearInterval(time);
+          start.disabled = false;
+          stop.disabled = true;
+          count = current - new Date();
+      }
 
-          // Apply timer formula and display output
-          function decrement_time() {
-              var current_2 = new Date().getTime();
-              count = current - current_2;
-              let minutes = Math.floor((count % (1000 * 60 * 60)) / (1000 * 60));
-              let seconds = Math.floor((count % (1000 * 60)) / 1000);
-              result.textContent = minutes + "m " + seconds + "s ";
-          }
+      // Apply timer formula and display output
+      function decrement_time() {
+          var current_2 = new Date().getTime();
+          count = current - current_2;
+          let minutes = Math.floor((count % (1000 * 60 * 60)) / (1000 * 60));
+          let seconds = Math.floor((count % (1000 * 60)) / 1000);
+          result.textContent = minutes + "m " + seconds + "s ";
+      }
 
-          start.addEventListener('click', start_time);
-          stop.addEventListener('click', stop_time);
-          decrement_time();
+      start.addEventListener('click', start_time);
+      stop.addEventListener('click', stop_time);
+      decrement_time();
+
+      // Reservation button click handler
+      document.querySelector('.make_reserve').addEventListener('click', function() {
+          this.disabled = true;
+          localStorage.setItem('reservation_disabled', 'true');
+          window.location.href = '{% url 'reserve_machine' %}';
+          
+          // Change machine status text to unavailable
+          var statusText = document.querySelector('.badge');
+          statusText.innerText = "Unavailable";
+          statusText.classList.remove('bg-success');
+          statusText.classList.add('bg-danger');
+          
+          // Reload page after reservation is made to start tracking time till reservation ends
+          setTimeout(() => {
+              location.reload();
+          }, 100);
       });
-  })();
 
-  // Check if reservation button is cicked
-  function reservation(get_machine) {
-      var button = document.querySelectorAll('.make_reserve')[get_machine - 1];
-      button.disabled = true;
-      localStorage.setItem('check_clicked' + get_machine, 'disabled');
-      window.location.href = '{% url 'reserve_machine' %}';
-      
-      // Change machine status text to available
-      var label_text = document.getElementById('get_available' + get_machine);
-      label_text.innerText = "Available";
-      label_text.classList.remove('bg-success');
-      label_text.classList.add('bg-danger');
-      
-      // Reload page after reservation is made to start tracking time till reservation ends
-      setTimeout(() => {
-          location.reload();
-      }, 100);
-  }
-
-  window.onload = function() {
-      for (let i = 1; i <= 3; i++) {
-          var set_clicked = localStorage.getItem('check_clicked' + i);
-          var button = document.querySelectorAll('.make_reserve')[i - 1];
-          if (set_clicked === 'disabled') {
-              button.disabled = true;
+      // Check if reservation button is clicked on page load
+      window.onload = function() {
+          var reservationDisabled = localStorage.getItem('reservation_disabled');
+          if (reservationDisabled === 'true') {
+              var reserveButton = document.querySelector('.make_reserve');
+              reserveButton.disabled = true;
               // Change machine status text to unavailable
-              var label_text = document.getElementById('get_available' + i);
-              label_text.innerText = "Unavailable";
-              label_text.classList.remove('bg-success');
-              label_text.classList.add('bg-danger');
+              var statusText = document.querySelector('.badge');
+              statusText.innerText = "Unavailable";
+              statusText.classList.remove('bg-success');
+              statusText.classList.add('bg-danger');
 
               // Enable reservation button again after one hour
-              setTimeout((function(btn) {
-                  return function() {
-                      btn.disabled = false;
-                      localStorage.removeItem('check_clicked' + i);
-
-                      // Reload page for machine status text to take effect
-                      setTimeout(() => {
-                          location.reload();
-                      }, 100);
-                  };
-              })(button), 5000);
+              setTimeout(() => {
+                  reserveButton.disabled = false;
+                  localStorage.removeItem('reservation_disabled');
+                  // Reload page for machine status text to take effect
+                  setTimeout(() => {
+                      location.reload();
+                  }, 100);
+              }, 5000); // Set reservation to 1 hour (less for testing purposes)
           }
-      }
-  };
+      };
+  })();
 </script>
 {% endblock %}
