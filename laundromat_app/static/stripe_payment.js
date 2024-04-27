@@ -11,7 +11,8 @@ var elements = stripe.elements();
 var card = elements.create('card');
 card.mount('#card-element');
 
-var address = elements.create('address', {mode: 'billing',})
+// Create an instance of the billing address Element & mount onto div
+var address = elements.create('address', {mode: 'billing'});
 address.mount('#address-element');
 
 // Handle real-time validation errors from the card Element
@@ -24,7 +25,7 @@ card.addEventListener('change', function(event) {
   }
 });
 
-// Handle real-time validation errors from the card Element
+// Handle real-time validation errors from the billing address Element
 address.addEventListener('change', function(event) {
   var displayError = document.getElementById('address-errors');
   if (event.error) {
@@ -34,47 +35,63 @@ address.addEventListener('change', function(event) {
   }
 });
 
+// Retrieve the CSRF token from the cookie
+function getCSRFToken() {
+  var csrfToken = null;
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.startsWith('csrftoken=')) {
+          csrfToken = cookie.substring('csrftoken='.length, cookie.length);
+          break;
+      }
+  }
+  return csrfToken;
+}
+
 // Handle form submission
 var form = document.getElementById('payment-form');
 form.addEventListener('submit', function(event) {
   event.preventDefault();
 
   var email = document.getElementById('email').value;
-  var billingDetails = {
-    email: email,
-    address: {
-      city: document.getElementById('billing-city').value,
-      country: document.getElementById('billing-country').value,
-      line1: document.getElementById('billing-street').value,
-      line2: '', // You can add the second line if needed
-      postal_code: document.getElementById('billing-postal-code').value,
-      state: document.getElementById('billing-state').value
-    }
-  };
 
-  stripe.createToken(card,  billingDetails )
-  .then(function(result) {
-    if (result.error) {
-      // Inform the user if there was an error.
+  // Create a PaymentIntent
+  fetch('/payment/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCSRFToken()  // Include CSRF token in headers
+    },
+    body: JSON.stringify({
+      email: email,
+    }),
+  })
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+    if (data.error) {
+      // Handle errors
       var errorElement = document.getElementById('card-errors');
-      errorElement.textContent = result.error.message;
+      errorElement.textContent = data.error;
     } else {
-      // Send the token to stripe server
-      stripeTokenHandler(result.token);
+      // If no errors, confirm the PaymentIntent
+      stripe.confirmCardPayment(data.client_secret, {
+        payment_method: {
+          card: card,
+        }
+      })
+      .then(function(result) {
+        if (result.error) {
+          // Handle errors from Stripe.js
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+        } else {
+          // Redirect to the success page
+          window.location.href = data.redirect_url;
+        }
+      });
     }
   });
 });
-
-// Submit the form with the token ID
-function stripeTokenHandler(token) {
-  // Insert the token ID into the form so it gets submitted to the server
-  var form = document.getElementById('payment-form');
-  var hiddenInput = document.createElement('input');
-  hiddenInput.setAttribute('type', 'hidden');
-  hiddenInput.setAttribute('name', 'stripeToken');
-  hiddenInput.setAttribute('value', token.id);
-  form.appendChild(hiddenInput);
-
-  // Submit the form
-  form.submit();
-}
