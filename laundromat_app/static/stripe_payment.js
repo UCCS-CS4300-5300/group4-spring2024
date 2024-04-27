@@ -8,12 +8,33 @@ var stripe = Stripe(stripePublicKey);
 var elements = stripe.elements();
 
 // Create an instance of the card Element & mount onto div
-var card = elements.create('card');
+var card = elements.create('card', {hidePostalCode: true});
 card.mount('#card-element');
 
 // Create an instance of the billing address Element & mount onto div
 var address = elements.create('address', {mode: 'billing'});
 address.mount('#address-element');
+
+var billingAddress;
+var city;
+var country;
+var line1;
+var line2;
+var postalCode;
+var state;
+
+// Handle real-time validation errors from the billing address Element
+address.on('change', function(event) {
+  billingAddress = event.value;
+  fullName = billingAddress.name;
+  city = billingAddress.city;
+  country = billingAddress.country;
+  line1 = billingAddress.line1;
+  line2 = billingAddress.line2;
+  postalCode = billingAddress.postal_code;
+  state = billingAddress.state;
+});
+
 
 // Handle real-time validation errors from the card Element
 card.addEventListener('change', function(event) {
@@ -65,6 +86,11 @@ form.addEventListener('submit', function(event) {
     },
     body: JSON.stringify({
       email: email,
+      city: city,
+      country: country,
+      line1: line1,
+      postal_code: postalCode,
+      state: state,
     }),
   })
   .then(function(response) {
