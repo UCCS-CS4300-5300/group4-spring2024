@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.conf import settings
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib import messages
 import requests
 import stripe
@@ -489,26 +489,30 @@ class ProcessPayment(UserPassesTestMixin, TemplateView):
             description = 'Payment for laundry services'  # Description of the payment
 
             try:
-                # Charge the customer's card using Stripe's API
-                charge = stripe.Charge.create(
+                # Create a PaymentIntent
+                payment_intent = stripe.PaymentIntent.create(
                     amount=amount,
                     currency='usd',
                     description=description,
-                    source=token,
+                    payment_method_types=['card'],
                 )
-                # If payment is successful, redirect to the payment success page
-                return redirect('successful_payment')
 
-            except stripe.error.CardError as e:
-                # Display error message if there's an issue with the card
-                messages.error(request, f'Error: {e.error.message}')
+                # Construct the response data
+                response_data = {
+                    'client_secret': payment_intent.client_secret,
+                    'redirect_url': reverse('successful_payment')  # URL to redirect after successful payment
+                }
 
-            except stripe.error.StripeError:
-                # Display generic error message for other Stripe-related errors
-                messages.error(request, 'Payment processing failed. Please try again later.')
+                # Return the response
+                return JsonResponse(response_data)
 
-        # Render the payment page template with the context
-        return self.render_to_response(self.get_context_data())
+            except stripe.error.StripeError as e:
+                # Handle Stripe errors
+                return JsonResponse({'error': str(e)}, status=400)
+
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
     def test_func(self):
         # Check if the current user is in the "Customer" group
