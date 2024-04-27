@@ -7,15 +7,26 @@ var stripe = Stripe(stripePublicKey);
 // Create an instance of Elements
 var elements = stripe.elements();
 
-// Create an instance of the card Element
+// Create an instance of the card Element & mount onto div
 var card = elements.create('card');
-
-// Add an instance of the card Element into the `card-element` div
 card.mount('#card-element');
+
+var address = elements.create('address', {mode: 'billing',})
+address.mount('#address-element');
 
 // Handle real-time validation errors from the card Element
 card.addEventListener('change', function(event) {
   var displayError = document.getElementById('card-errors');
+  if (event.error) {
+    displayError.textContent = event.error.message;
+  } else {
+    displayError.textContent = '';
+  }
+});
+
+// Handle real-time validation errors from the card Element
+address.addEventListener('change', function(event) {
+  var displayError = document.getElementById('address-errors');
   if (event.error) {
     displayError.textContent = event.error.message;
   } else {
@@ -28,14 +39,21 @@ var form = document.getElementById('payment-form');
 form.addEventListener('submit', function(event) {
   event.preventDefault();
 
-  stripe.createToken(card, {
-    name: document.getElementById('cardholder-name').value, // Pass cardholder name to createToken method
-    email: document.getElementById('email').value, // Pass email to createToken method
-    address_line1: document.getElementById('billing-street').value, // Pass street address
-    address_city: document.getElementById('billing-city').value, // Pass city
-    address_state: document.getElementById('billing-state').value, // Pass state
-    address_country: document.getElementById('billing-country').value // Pass country
-  }).then(function(result) {
+  var email = document.getElementById('email').value;
+  var billingDetails = {
+    email: email,
+    address: {
+      city: document.getElementById('billing-city').value,
+      country: document.getElementById('billing-country').value,
+      line1: document.getElementById('billing-street').value,
+      line2: '', // You can add the second line if needed
+      postal_code: document.getElementById('billing-postal-code').value,
+      state: document.getElementById('billing-state').value
+    }
+  };
+
+  stripe.createToken(card,  billingDetails )
+  .then(function(result) {
     if (result.error) {
       // Inform the user if there was an error.
       var errorElement = document.getElementById('card-errors');
