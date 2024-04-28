@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django import forms
-from .models import Machines, Laundromat
+from .models import Machines, Laundromat, Reservation
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
