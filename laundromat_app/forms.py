@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django import forms
-from .models import Machines, Laundromat
+from .models import Machines, Laundromat, Reservation
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
@@ -35,9 +35,8 @@ class MachineForm(forms.ModelForm):
             'status': forms.HiddenInput()
         }
 
-#uncomment if we move on, ideally we do a view with 45 time limit
-#leaving time to swap or clean machines
-#class ReservationForm(forms.ModelForm):
- #   class Meta:
-  #      model = Reservation
-   #     fields = ['machine', 'start_time']
+class ReservationForm(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['machine', 'start_time']
+
