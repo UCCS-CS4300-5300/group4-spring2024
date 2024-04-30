@@ -10,20 +10,20 @@ class Laundromat(models.Model):
     location = models.CharField(max_length = 100)
     hours = models.CharField(max_length = 100)
     description = models.CharField(max_length = 500)
-   
+
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         return reverse('laundromat_detail', args=[str(self.id)])
-       
+
 
 class Machines(models.Model):
     Dryer = 'Dryer'
     Washer = 'Washer'
 
-    
+
     Machine_Choice = [
         (Dryer, 'Dryer'),
         (Washer, 'Washer'),
@@ -55,4 +55,3 @@ class Reservation(models.Model):
     machine = models.ForeignKey(Machines, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-
