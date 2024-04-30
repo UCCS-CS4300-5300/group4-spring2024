@@ -39,4 +39,3 @@ class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
         fields = ['machine', 'start_time']
-
