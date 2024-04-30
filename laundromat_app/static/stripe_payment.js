@@ -23,7 +23,7 @@ var line2;
 var postalCode;
 var state;
 
-// Handle real-time validation errors from the billing address Element
+// Capture the values entered in the address element to pass to Stripe
 address.on('change', function(event) {
   billingAddress = event.value;
   fullName = billingAddress.name;

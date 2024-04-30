@@ -20,8 +20,6 @@ urlpatterns = [
     #logoout page
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('unauthorized/', UnauthorizedView.as_view(), name='unauthorized_view'),
-    # Machine list page
-    #path('machines/', views.machine_list, name = 'machine_list'),
     # Reserve machine page
     path('reserve_machine/', views.reserve_machine, name='reserve_machine'),     
     # Contact us page
