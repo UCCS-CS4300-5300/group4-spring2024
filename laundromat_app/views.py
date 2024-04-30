@@ -10,10 +10,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LogoutView, LoginView
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
-from django.shortcuts import redirect
 from django.conf import settings
 from django.http import Http404, JsonResponse
-from django.contrib import messages
 import requests
 import stripe
 from .forms import ContactForm, LaundromatForm, MachineForm, SignUpForm
@@ -120,7 +118,7 @@ def home_page(request):
         else:
             # Query laundromats owned by the current user
             laundromats = Laundromat.objects.all()
-            
+
             # Fetch all machines for each laundromat
             for laundromat in laundromats:
                 laundromat.machines = laundromat.machines_set.all()
@@ -132,13 +130,13 @@ def home_page(request):
             return render(request, 'homepage.html', context)
     else:
 
-        # Handle anonymous users 
+        # Handle anonymous users
         # Query laundromats owned by the current user
         laundromats = Laundromat.objects.all()
-            
+
         # Fetch all machines for each laundromat
         for laundromat in laundromats:
-          laundromat.machines = laundromat.machines_set.all()
+            laundromat.machines = laundromat.machines_set.all()
 
         # Pass the queryset to the template context
         context = {
@@ -482,8 +480,6 @@ class ProcessPayment(UserPassesTestMixin, TemplateView):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         if request.method == 'POST':
-            # Retrieve payment details from the form
-            token = request.POST.get('stripeToken')
             #amount = request.POST.get('amount')  # Amount in cents
             amount = 1000  # $10.00 in cents FOR TESTING
             description = 'Payment for laundry services'  # Description of the payment

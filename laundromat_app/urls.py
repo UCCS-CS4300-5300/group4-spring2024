@@ -21,7 +21,7 @@ urlpatterns = [
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('unauthorized/', UnauthorizedView.as_view(), name='unauthorized_view'),
     # Reserve machine page
-    path('reserve_machine/', views.reserve_machine, name='reserve_machine'),     
+    path('reserve_machine/', views.reserve_machine, name='reserve_machine'),
     # Contact us page
     path('contact/', views.contact_us, name = 'contact_us'),
     # About page
